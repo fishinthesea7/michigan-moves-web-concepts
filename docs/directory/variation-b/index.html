@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Michigan Moves Coalition Directory prototype — variation B">
+  <title>Coalition Directory — Variation B | Michigan Moves Coalition</title>
+  <link rel="icon" href="https://mimoves.org/wp-content/uploads/2024/03/Michigan-Moves_Logo-file-02-scaled-e1778529809704-1024x288.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/prototype.css?v=20260730">
+  <script src="../../assets/shared.js?v=20260730" defer></script>
+  <script src="../../assets/directory-data.js?v=20260730" defer></script>
+  <script src="../../assets/directory.js?v=20260730" defer></script>
+</head>
+<body class="mmc-standalone" data-site-root="../../" data-variation="b">
+  <aside class="mmc-review-bar" data-preview-only aria-label="Prototype review notice">
+    <div class="mmc-review-bar__inner"><strong>Website concept for review — not the live Michigan Moves website</strong><a href="../../">← Back to all concepts</a></div>
+  </aside>
+  <div data-preview-header data-active="directory"></div>
+
+  <!-- BEGIN WORDPRESS / ELEMENTOR PAGE-BODY BLOCK -->
+  <main id="main-content" class="mmc-page mmc-directory mmc-directory--b" data-directory-mode="list">
+    <section class="mmc-hero mmc-hero--split" aria-labelledby="directory-b-title">
+      <div class="mmc-container mmc-hero__inner">
+        <div class="mmc-hero__content">
+          <p class="mmc-eyebrow">Michigan Moves community</p>
+          <h1 id="directory-b-title">Find Coalition Participants</h1>
+          <p class="mmc-hero__lead">Search a consent-based directory of Coalition Ambassadors, Coalition Members, and Partners working across the systems that shape how people live, work, learn, and play.</p>
+          <a class="mmc-btn" href="#directory-b">Open directory tools <span aria-hidden="true">↓</span></a>
+          <div class="mmc-demo-notice"><span aria-hidden="true">ⓘ</span><span><strong>Demonstration only.</strong> Every profile, person, logo, website, county, and region in this prototype is placeholder data. Final public profiles would appear only with permission.</span></div>
+        </div>
+        <aside class="mmc-hero__panel" aria-labelledby="credential-b-heading">
+          <p class="mmc-eyebrow">How profiles are labeled</p>
+          <h2 id="credential-b-heading">Primary role + optional credential</h2>
+          <p>Each public profile has one primary role:</p>
+          <ul><li>Coalition Ambassador</li><li>Coalition Member</li><li>Partner</li></ul>
+          <p class="mmc-secondary-credential-note"><strong>CEO Pledge Signer</strong> may appear as a secondary badge on an organization in any of those roles.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="mmc-section mmc-section--light" id="directory-b" aria-labelledby="directory-tools-b-heading">
+      <div class="mmc-container">
+        <div class="mmc-section-heading">
+          <p class="mmc-eyebrow">Directory index</p>
+          <h2 id="directory-tools-b-heading">Browse demonstration profiles</h2>
+          <p>Use the persistent directory tools and prominent A–Z index, then expand any compact row for representative, geography, description, and website fields.</p>
+        </div>
+
+        <div class="mmc-directory-toolbar-b" aria-label="Directory search and filters">
+          <div class="mmc-directory-toolbar-b__grid">
+            <div class="mmc-field"><label for="search-b-desktop">Search organization or representative</label><input id="search-b-desktop" type="search" data-directory-search placeholder="Organization Name or First Last…" autocomplete="off"></div>
+            <div class="mmc-field"><label for="role-b-desktop">Primary role</label><select id="role-b-desktop" data-directory-role><option value="">All primary roles</option><option value="Coalition Ambassador">Coalition Ambassador</option><option value="Coalition Member">Coalition Member</option><option value="Partner">Partner</option></select></div>
+            <div class="mmc-field"><label for="sector-b-desktop">Sector</label><select id="sector-b-desktop" data-directory-sector></select></div>
+            <div class="mmc-field"><label for="geography-b-desktop">Geography</label><select id="geography-b-desktop" data-directory-geography></select></div>
+          </div>
+          <div class="mmc-filter-actions"><label class="mmc-checkbox"><input type="checkbox" data-directory-ceo> CEO Pledge Signer only</label><button class="mmc-clear-button" type="button" data-clear-filters>Clear all filters</button></div>
+        </div>
+
+        <details class="mmc-mobile-filter-disclosure">
+          <summary><span>Search and filters</span><span data-active-filter-count>0 active</span></summary>
+          <div class="mmc-mobile-filter-disclosure__body">
+            <div class="mmc-field"><label for="search-b-mobile">Search organization or representative</label><input id="search-b-mobile" type="search" data-directory-search placeholder="Organization Name or First Last…" autocomplete="off"></div>
+            <div class="mmc-field"><label for="role-b-mobile">Primary role</label><select id="role-b-mobile" data-directory-role><option value="">All primary roles</option><option value="Coalition Ambassador">Coalition Ambassador</option><option value="Coalition Member">Coalition Member</option><option value="Partner">Partner</option></select></div>
+            <div class="mmc-field"><label for="sector-b-mobile">Sector</label><select id="sector-b-mobile" data-directory-sector></select></div>
+            <div class="mmc-field"><label for="geography-b-mobile">Geography</label><select id="geography-b-mobile" data-directory-geography></select></div>
+            <label class="mmc-checkbox"><input type="checkbox" data-directory-ceo> CEO Pledge Signer only</label>
+            <button class="mmc-clear-button" type="button" data-clear-filters>Clear all filters</button>
+          </div>
+        </details>
+
+        <div class="mmc-directory-tools mmc-directory-tools--index">
+          <div class="mmc-result-bar"><p data-result-count aria-live="polite"></p><a class="mmc-text-link" href="../../get-involved/variation-b/">Get involved <span aria-hidden="true">→</span></a></div>
+          <div class="mmc-alphabet-wrap mmc-alphabet-wrap--prominent"><span>Browse organizations A–Z</span><nav class="mmc-alphabet" data-alphabet aria-label="Filter by first letter"></nav></div>
+          <div class="mmc-directory-results--list" data-directory-results></div>
+        </div>
+
+        <details class="mmc-directory-coverage-disclosure">
+          <summary><span><small>Secondary prototype component</small>Explore placeholder coverage</span><span aria-hidden="true">+</span></summary>
+          <div class="mmc-directory-coverage-disclosure__body">
+            <div class="mmc-map-panel mmc-map-panel--secondary">
+              <div class="mmc-map-visual">
+                <svg viewBox="0 0 500 370" role="img" aria-labelledby="map-b-title map-b-desc">
+                  <title id="map-b-title">Stylized Michigan demonstration map</title>
+                  <desc id="map-b-desc">A decorative map with four interactive placeholder region markers. It does not show actual participants or coverage.</desc>
+                  <path class="mmc-map-land" d="M38 94c30-26 63-42 98-45 24-2 45 5 62 17l40-8 34 19-38 23-45 6-35 27-44-4-35-18-32 7-14-12z"/>
+                  <path class="mmc-map-land" d="M309 55c21 12 29 33 24 61l20 27-5 34-20 19-5 35-27 61-30 18-15-22 7-31-18-34 5-30-18-37 7-24 23 11 11-26-2-43z"/>
+                  <g class="mmc-map-marker" role="button" tabindex="0" data-map-region="Region Name 04" aria-label="Filter by Region Name 04" aria-pressed="false"><circle class="mmc-map-dot" cx="133" cy="89" r="15"/><text class="mmc-map-label" x="133" y="89">04</text></g>
+                  <g class="mmc-map-marker" role="button" tabindex="0" data-map-region="Region Name 03" aria-label="Filter by Region Name 03" aria-pressed="false"><circle class="mmc-map-dot" cx="302" cy="125" r="15"/><text class="mmc-map-label" x="302" y="125">03</text></g>
+                  <g class="mmc-map-marker" role="button" tabindex="0" data-map-region="Region Name 02" aria-label="Filter by Region Name 02" aria-pressed="false"><circle class="mmc-map-dot" cx="288" cy="211" r="15"/><text class="mmc-map-label" x="288" y="211">02</text></g>
+                  <g class="mmc-map-marker" role="button" tabindex="0" data-map-region="Region Name 01" aria-label="Filter by Region Name 01" aria-pressed="false"><circle class="mmc-map-dot" cx="277" cy="277" r="15"/><text class="mmc-map-label" x="277" y="277">01</text></g>
+                </svg>
+              </div>
+              <div class="mmc-map-copy">
+                <p class="mmc-eyebrow">Prototype geography</p>
+                <h2>Explore by placeholder region</h2>
+                <p>No real geographic coverage is implied. Use either the numbered markers or the equivalent region buttons.</p>
+                <p class="mmc-map-selection" data-map-selection aria-live="polite">All placeholder geographies are included.</p>
+                <div class="mmc-map-controls" aria-label="Filter demonstration profiles by placeholder region"><button type="button" data-map-region="Region Name 01" aria-pressed="false">Region Name 01</button><button type="button" data-map-region="Region Name 02" aria-pressed="false">Region Name 02</button><button type="button" data-map-region="Region Name 03" aria-pressed="false">Region Name 03</button><button type="button" data-map-region="Region Name 04" aria-pressed="false">Region Name 04</button></div>
+                <small>No counts, coverage claims, or geographic conclusions should be drawn from this demonstration component.</small>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="mmc-section mmc-section--cream mmc-section--tight" aria-labelledby="directory-join-b-heading">
+      <div class="mmc-container"><div class="mmc-directory-join-callout"><div><p class="mmc-eyebrow">Join the Coalition</p><h2 id="directory-join-b-heading">Interested in being part of Michigan Moves?</h2><p>Compare the Ambassador and Coalition Member pathways, then use the official join form on the Get Involved page.</p></div><a class="mmc-btn mmc-btn--teal" href="../../get-involved/variation-b/">Explore ways to get involved <span aria-hidden="true">→</span></a></div></div>
+    </section>
+  </main>
+  <!-- END WORDPRESS / ELEMENTOR PAGE-BODY BLOCK -->
+
+  <div data-preview-footer></div>
+</body>
+</html>

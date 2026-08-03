@@ -10,7 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/hub.css?v=20260803">
+  <link rel="stylesheet" href="./assets/hub.css?v=20260803-feedback">
+  <link rel="stylesheet" href="./assets/feedback.css?v=20260803-feedback">
+  <script src="./assets/feedback.js?v=20260803-feedback" defer></script>
 </head>
 <body>
   <main class="hub-shell">
@@ -22,7 +24,7 @@
         </div>
         <p class="hub-eyebrow">Development hub</p>
         <h1 id="hub-title">Michigan Moves Website Concepts</h1>
-        <p class="hub-lead">These four working concepts show two ways to organize the same proposed content. Compare the layout and browsing experience, then select any card to open the complete prototype in a new tab.</p>
+        <p class="hub-lead">Compare four working concepts, then right-click or double-click inside any prototype to pin a comment. Review or edit notes from each card’s Feedback tab.</p>
       </div>
       <a class="hub-live-link" href="https://mimoves.org/" target="_blank" rel="noopener noreferrer">
         <span>Compare with the current website</span>
@@ -33,33 +35,57 @@
     <section class="hub-grid" aria-labelledby="concepts-heading">
       <h2 class="hub-sr-only" id="concepts-heading">Available website concepts</h2>
 
-      <a class="hub-card hub-card--teal" href="./get-involved/variation-a/" target="_blank" rel="noopener noreferrer" aria-label="Open Get Involved Variation A, compare both roles at once">
-        <div class="hub-card__topline"><span>Get Involved</span><strong>Variation A</strong></div>
-        <h3>Compare both roles at once</h3>
-        <p>Ambassador and Coalition Member appear side by side, followed by a detailed comparison. Best for quickly scanning the differences.</p>
-        <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
-      </a>
+      <article class="hub-concept">
+        <a class="hub-card hub-card--teal" href="./get-involved/variation-a/" target="_blank" rel="noopener noreferrer" aria-label="Open Get Involved Variation A, compare both roles at once">
+          <div class="hub-card__topline"><span>Get Involved</span><strong>Variation A</strong></div>
+          <h3>Compare both roles at once</h3>
+          <p>Ambassador and Coalition Member appear side by side, followed by a detailed comparison. Best for quickly scanning the differences.</p>
+          <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
+        </a>
+        <details class="hub-feedback" data-feedback-page="get-involved-variation-a">
+          <summary><span>Feedback</span><span data-feedback-count>0 comments</span></summary>
+          <div class="hub-feedback__panel"><p class="hub-feedback__note">Saved in this browser and synchronized with the numbered pins on the prototype.</p><p class="hub-feedback__empty" data-feedback-empty>No comments yet. Open the concept and right-click or double-click to add one.</p><ol class="hub-feedback__list" data-feedback-list></ol></div>
+        </details>
+      </article>
 
-      <a class="hub-card hub-card--green" href="./get-involved/variation-b/" target="_blank" rel="noopener noreferrer" aria-label="Open Get Involved Variation B, choose a role then explore it">
-        <div class="hub-card__topline"><span>Get Involved</span><strong>Variation B</strong></div>
-        <h3>Choose a role, then explore it</h3>
-        <p>Visitors select Ambassador or Coalition Member first, then see details for that path. Best when people may want more guidance.</p>
-        <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
-      </a>
+      <article class="hub-concept">
+        <a class="hub-card hub-card--green" href="./get-involved/variation-b/" target="_blank" rel="noopener noreferrer" aria-label="Open Get Involved Variation B, choose a role then explore it">
+          <div class="hub-card__topline"><span>Get Involved</span><strong>Variation B</strong></div>
+          <h3>Choose a role, then explore it</h3>
+          <p>Visitors select Ambassador or Coalition Member first, then see details for that path. Best when people may want more guidance.</p>
+          <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
+        </a>
+        <details class="hub-feedback" data-feedback-page="get-involved-variation-b">
+          <summary><span>Feedback</span><span data-feedback-count>0 comments</span></summary>
+          <div class="hub-feedback__panel"><p class="hub-feedback__note">Saved in this browser and synchronized with the numbered pins on the prototype.</p><p class="hub-feedback__empty" data-feedback-empty>No comments yet. Open the concept and right-click or double-click to add one.</p><ol class="hub-feedback__list" data-feedback-list></ol></div>
+        </details>
+      </article>
 
-      <a class="hub-card hub-card--gold" href="./directory/variation-a/" target="_blank" rel="noopener noreferrer" aria-label="Open Coalition Directory Variation A, map first with profile cards">
-        <div class="hub-card__topline"><span>Coalition Directory</span><strong>Variation A</strong></div>
-        <h3>Map first, then profile cards</h3>
-        <p>A Michigan coverage view leads into filters and a visual grid of organizations. Best when geography should feel prominent.</p>
-        <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
-      </a>
+      <article class="hub-concept">
+        <a class="hub-card hub-card--gold" href="./directory/variation-a/" target="_blank" rel="noopener noreferrer" aria-label="Open Coalition Directory Variation A, map first with profile cards">
+          <div class="hub-card__topline"><span>Coalition Directory</span><strong>Variation A</strong></div>
+          <h3>Map first, then profile cards</h3>
+          <p>A Michigan coverage view leads into filters and a visual grid of organizations. Best when geography should feel prominent.</p>
+          <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
+        </a>
+        <details class="hub-feedback" data-feedback-page="directory-variation-a">
+          <summary><span>Feedback</span><span data-feedback-count>0 comments</span></summary>
+          <div class="hub-feedback__panel"><p class="hub-feedback__note">Saved in this browser and synchronized with the numbered pins on the prototype.</p><p class="hub-feedback__empty" data-feedback-empty>No comments yet. Open the concept and right-click or double-click to add one.</p><ol class="hub-feedback__list" data-feedback-list></ol></div>
+        </details>
+      </article>
 
-      <a class="hub-card hub-card--blue" href="./directory/variation-b/" target="_blank" rel="noopener noreferrer" aria-label="Open Coalition Directory Variation B, searchable alphabetical list">
-        <div class="hub-card__topline"><span>Coalition Directory</span><strong>Variation B</strong></div>
-        <h3>Searchable alphabetical list</h3>
-        <p>Search and A–Z browsing lead into compact profile rows, with the map available second. Best for finding a specific organization.</p>
-        <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
-      </a>
+      <article class="hub-concept">
+        <a class="hub-card hub-card--blue" href="./directory/variation-b/" target="_blank" rel="noopener noreferrer" aria-label="Open Coalition Directory Variation B, searchable alphabetical list">
+          <div class="hub-card__topline"><span>Coalition Directory</span><strong>Variation B</strong></div>
+          <h3>Searchable alphabetical list</h3>
+          <p>Search and A–Z browsing lead into compact profile rows, with the map available second. Best for finding a specific organization.</p>
+          <span class="hub-card__action">Open concept <span aria-hidden="true">↗</span></span>
+        </a>
+        <details class="hub-feedback" data-feedback-page="directory-variation-b">
+          <summary><span>Feedback</span><span data-feedback-count>0 comments</span></summary>
+          <div class="hub-feedback__panel"><p class="hub-feedback__note">Saved in this browser and synchronized with the numbered pins on the prototype.</p><p class="hub-feedback__empty" data-feedback-empty>No comments yet. Open the concept and right-click or double-click to add one.</p><ol class="hub-feedback__list" data-feedback-list></ol></div>
+        </details>
+      </article>
     </section>
 
     <footer class="hub-footer">

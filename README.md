@@ -23,7 +23,9 @@ docs/
 ├── 404.html
 ├── assets/
 │   ├── hub.css
+│   ├── feedback.css
 │   ├── prototype.css
+│   ├── feedback.js
 │   ├── shared.js
 │   ├── get-involved.js
 │   ├── directory.js
@@ -61,6 +63,20 @@ The connected GitHub account is `fishinthesea7`. The available connector cannot 
 - `https://fishinthesea7.github.io/michigan-moves-web-concepts/directory/variation-b/`
 
 The hub URL is the normal link to share for review. Direct links are stable bookmarks for individual concepts.
+
+## Prototype feedback
+
+Each hosted prototype includes a lightweight annotation layer for review:
+
+- Right-click or double-click non-interactive page content to add a numbered comment pin.
+- Drag the editor header to reposition a comment before saving.
+- Select a numbered pin to reopen, edit, move, or delete its comment.
+- Use the right-side feedback bookmark to review all comments on the current page in creation order.
+- Use the Feedback disclosure attached to each hub card to review or edit that page’s comments.
+
+`docs/assets/feedback.js` owns the shared data model and behavior. Each prototype supplies a stable `data-feedback-page` identifier on `<body>`, and the matching hub disclosure uses the same identifier. Data is stored under the `mmcPrototypeFeedbackV1` local-storage key, so edits synchronize between open hub and prototype tabs through browser storage events.
+
+This is intentionally a no-backend review aid. Comments exist only in the browser and device where they were created; they are not submitted to GitHub, emailed, or shared with reviewers on other devices. Clearing site data removes them.
 
 ## One-time GitHub setup
 
@@ -149,7 +165,7 @@ Each prototype HTML file marks the transferable block:
 
 Transfer only the `<main class="mmc-page ...">` block. Do not transfer the review notice, standalone preview header, or standalone footer.
 
-Enqueue `docs/assets/prototype.css` plus the applicable page script. Directory pages also require `directory-data.js` before `directory.js`. `shared.js` builds only the hosted standalone header and footer.
+Enqueue `docs/assets/prototype.css` plus the applicable page script. Directory pages also require `directory-data.js` before `directory.js`. `shared.js` builds only the hosted standalone header and footer. The review-only `feedback.css` and `feedback.js` files stay outside the WordPress handoff unless a separate production feedback system is explicitly approved.
 
 ## Public-access warning and safety
 
@@ -181,4 +197,4 @@ GitHub Pages is publicly accessible to anyone with the URL. `robots.txt` and pag
 
 ## Verification expectations
 
-Before publishing an update, serve `docs/` locally and verify the hub, four direct pages, review links, mobile menu, role controls, accordions, form fallbacks, directory filters, A–Z navigation, map controls, consent gate, responsive layouts, relative assets, and browser console. After publishing, repeat the basic link, asset, mobile, and console checks against the deployed URLs.
+Before publishing an update, serve `docs/` locally and verify the hub, four direct pages, review links, feedback pins and synchronized hub editing, mobile menu, role controls, accordions, form fallbacks, directory filters, A–Z navigation, map controls, consent gate, responsive layouts, relative assets, and browser console. After publishing, repeat the basic link, asset, mobile, and console checks against the deployed URLs.

@@ -226,7 +226,7 @@
     if (!sharedConfig.enabled) return 'Shared comments are awaiting database setup. Comments currently remain in this browser.';
     if (sharedStatus === 'connecting') return 'Connecting to shared comments…';
     if (sharedStatus === 'error') return sharedStatusMessage || 'Shared comments could not be reached. Showing the most recent saved copy.';
-    return 'Saved comments sync across devices. Unfinished text remains in this browser until Save is selected.';
+    return 'Saved comments sync across devices and remain separate from website updates. Unfinished text remains in this browser until Save is selected.';
   }
 
   function renderSharedStatus() {
@@ -399,11 +399,17 @@
   }
 
   async function deleteSharedComment(pageId, commentId) {
-    var rows = await sharedRequest(
-      encodeURIComponent(sharedConfig.table) + '?id=eq.' + encodeURIComponent(commentId) + '&page_id=eq.' + encodeURIComponent(pageId) + '&select=id,page_id',
-      { method: 'DELETE', prefer: 'return=representation' }
+    var removed = await sharedRequest(
+      'rpc/soft_delete_prototype_comment',
+      {
+        method: 'POST',
+        body: {
+          p_comment_id: commentId,
+          p_page_id: pageId
+        }
+      }
     );
-    if (!Array.isArray(rows) || !rows[0]) throw new Error('The shared comment could not be found for deletion.');
+    if (removed !== true) throw new Error('The shared comment could not be found for removal.');
     clearDraft(pageId, commentId);
     var store = readSharedStore();
     var page = ensurePage(store, pageId);

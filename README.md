@@ -80,12 +80,24 @@ Each hosted prototype includes a lightweight annotation layer for review:
 - Hub Feedback disclosures open downward in the page flow. They push lower cards down, stop at roughly one card’s depth, and scroll internally when feedback is longer.
 - Text entered in a prototype editor or hub edit form is saved continuously and recovered after a reload or browser restart, even before Save is selected.
 - Saved comments are loaded from one shared database, so a comment created or edited on one device appears on another device after refresh, refocus, or the short background refresh interval.
+- Publishing or redesigning the static hub and prototype pages does not replace the shared database, so saved comments remain attached to their stable page identifiers.
+- Removing a shared comment through the interface is a recoverable soft deletion. Prior versions are archived privately before every edit or removal.
 
 `docs/assets/feedback.js` owns the shared data model and behavior. Each prototype supplies a stable `data-feedback-page` identifier on `<body>`, and the matching hub disclosure uses the same identifier. Shared connection values live in `docs/assets/feedback-config.js`, and the database definition and row-level policies live in `supabase/feedback-schema.sql`.
 
 Unfinished drafts intentionally remain browser-local under `mmcPrototypeFeedbackDraftsV1` until Save is selected. The most recent shared results are cached under `mmcPrototypeSharedFeedbackCacheV1` so the interface can show its last known state during a temporary connection problem. Comments made before shared storage was enabled remain under `mmcPrototypeFeedbackV1`; when found, the interface offers an explicit **Publish to shared review** control rather than uploading them silently.
 
-There are no email notifications, identity prompts, owner tokens, or user accounts. Consequently, this is an open collaborative review surface: anyone who has the public GitHub Pages URL can read, create, edit, or delete comments. Do not place sensitive, personal, or confidential information in comments.
+There are no email notifications, identity prompts, owner tokens, or user accounts. Consequently, this is an open collaborative review surface: anyone who has the public GitHub Pages URL can read, create, edit, or remove visible comments. Without identity, the webpage cannot technically distinguish a comment’s creator from another visitor. Removals are therefore retained as soft-deleted database rows, and previous versions remain in the private `prototype_comment_history` table. Do not place sensitive, personal, or confidential information in comments.
+
+### Comment-retention rules
+
+- Never rename an existing `data-feedback-page` value; it is the durable relationship between a page and its comments.
+- Ordinary HTML, CSS, JavaScript, and GitHub Pages deployments must not run database deletion or replacement operations.
+- Never truncate or drop `prototype_comments`, `prototype_comment_counters`, or `prototype_comment_history` during a prototype update.
+- Before deploying, record the current active comment IDs and text through the read-only public endpoint. After deployment, confirm the same records remain unless a reviewer intentionally changed them during the deployment window.
+- Before changing the feedback schema, make a Supabase database backup or export.
+- Interface removal sets `deleted_at`; it does not hard-delete the row. A Supabase administrator can restore a comment by setting its `deleted_at` value back to `null`.
+- `prototype_comment_history` has row-level security enabled and no public policies. Only the Supabase project administrator should inspect or use it for recovery.
 
 ### Shared-comment configuration
 
@@ -106,7 +118,7 @@ The current public prototype is connected to its dedicated Supabase project thro
    ```
 
 5. Never place a Supabase secret key, legacy `service_role` key, database password, or access token in this repository.
-6. Serve `docs/` locally and verify create, refresh, edit, and delete from two different browser origins or devices before publishing.
+6. Serve `docs/` locally and verify create, refresh, edit, recoverable removal, and retention across two different browser origins or devices before publishing.
 
 If the Project URL or publishable key is removed, the UI clearly reports that shared storage is pending and retains browser-local behavior rather than pretending comments are cross-device.
 
@@ -225,4 +237,4 @@ GitHub Pages is publicly accessible to anyone with the URL. `robots.txt` and pag
 
 ## Verification expectations
 
-Before publishing an update, serve `docs/` locally and verify the hub, four direct pages, review links, feedback pins and synchronized hub editing, mobile menu, role controls, accordions, form fallbacks, directory filters, A–Z navigation, map controls, consent gate, responsive layouts, relative assets, and browser console. After publishing, repeat the basic link, asset, mobile, and console checks against the deployed URLs.
+Before publishing an update, capture a read-only feedback snapshot, serve `docs/` locally, and verify the hub, four direct pages, review links, feedback pins and synchronized hub editing, recoverable removal, mobile menu, role controls, accordions, form fallbacks, directory filters, A–Z navigation, map controls, consent gate, responsive layouts, relative assets, and browser console. After publishing, confirm the comment snapshot is intact and repeat the basic link, asset, mobile, and console checks against the deployed URLs.

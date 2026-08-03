@@ -74,6 +74,7 @@
 .mmc-feedback-editor__actions { margin-top: 10px; display: flex; align-items: center; gap: 7px; }
 .mmc-feedback-editor__actions button { min-height: 34px; padding: 7px 11px; border: 1px solid #b9c9cb; border-radius: 4px; background: #fff; color: #17505c; font: 750 12px/1 Inter, Arial, sans-serif; cursor: pointer; }
 .mmc-feedback-editor__actions button:hover { background: #f2f6f5; }
+.mmc-feedback-editor__actions button:disabled { opacity: .55; cursor: wait; }
 .mmc-feedback-editor__actions button:focus-visible { outline: 3px solid #eeae68; outline-offset: 2px; }
 .mmc-feedback-editor__actions .mmc-feedback-editor__save { border-color: #17505c; background: #17505c; color: #fff; }
 .mmc-feedback-editor__actions .mmc-feedback-editor__delete { margin-left: auto; border-color: #d9aaa5; color: #8b2c24; }
@@ -121,6 +122,15 @@
 .mmc-feedback-drawer__scroll { padding: 16px 18px 18px; overflow-y: auto; overscroll-behavior: contain; }
 .mmc-feedback-drawer__instructions { margin: 0 0 9px; color: #314b50; font-size: 13px; line-height: 1.48; }
 .mmc-feedback-drawer__storage { margin: 0; padding: 8px 10px; border-radius: 5px; background: #f7f4ed; color: #5d5a4f; font-size: 11px; }
+.mmc-feedback-drawer__storage.is-ready { background: #edf5ef; color: #385b41; }
+.mmc-feedback-drawer__storage.is-error { background: #fff1ef; color: #8b2c24; }
+.mmc-feedback-migration { margin-top: 9px; padding: 9px 10px; border: 1px solid #dfc291; border-radius: 5px; background: #fff8ed; color: #5d513e; }
+.mmc-feedback-migration[hidden] { display: none; }
+.mmc-feedback-migration p { margin: 0 0 7px; font-size: 10px; line-height: 1.4; }
+.mmc-feedback-migration p.is-error { color: #8b2c24; }
+.mmc-feedback-migration button { min-height: 30px; padding: 6px 9px; border: 1px solid #17505c; border-radius: 4px; background: #17505c; color: #fff; font: 750 10px/1 Inter, Arial, sans-serif; cursor: pointer; }
+.mmc-feedback-migration button:disabled { opacity: .6; cursor: wait; }
+.mmc-feedback-migration button:focus-visible { outline: 3px solid #eeae68; outline-offset: 2px; }
 .mmc-feedback-drawer__comments { margin-top: 16px; }
 .mmc-feedback-drawer__comments h2 { margin: 0 0 8px; color: #0f3840; font-size: 14px; }
 .mmc-feedback-drawer__comments h2 span { display: inline-flex; min-width: 22px; min-height: 22px; margin-left: 4px; align-items: center; justify-content: center; border-radius: 999px; background: #e9f1f2; color: #17505c; font-size: 11px; }
@@ -179,6 +189,9 @@
   border-top: 1px solid #dce4e4;
 }
 .hub-feedback__note { margin: 0 0 9px; color: #65787c; font-size: 10px; }
+.hub-feedback__note.is-ready { color: #385b41; }
+.hub-feedback__note.is-error { color: #8b2c24; }
+.mmc-feedback-migration--hub { margin: 0 0 9px; }
 .hub-feedback__empty { margin: 0; color: #4a6068; font-size: 11px; line-height: 1.45; }
 .hub-feedback__list { margin: 0; padding: 0; display: grid; gap: 8px; list-style: none; }
 .hub-feedback-item { padding: 8px 9px; border: 1px solid #d7e0e0; border-radius: 5px; background: #fbfcfc; }
@@ -189,8 +202,10 @@
 .hub-feedback-item__form textarea { width: 100%; min-height: 64px; padding: 7px; resize: vertical; border: 1px solid #9eb3b6; border-radius: 4px; color: #1a2b2e; font: 11px/1.4 Inter, Arial, sans-serif; }
 .hub-feedback-item__form textarea:focus { outline: 3px solid rgba(238,174,104,.45); border-color: #17505c; }
 .hub-feedback-item__draft-status { margin: 4px 0 0; color: #65787c; font-size: 9px; }
+.hub-feedback-item__draft-status.is-error { color: #8b2c24; }
 .hub-feedback-item__actions { margin-top: 6px; display: flex; gap: 5px; }
 .hub-feedback-item__actions button { min-height: 27px; padding: 5px 8px; border: 1px solid #b9c9cb; border-radius: 3px; background: #fff; color: #17505c; font: 700 10px/1 Inter, Arial, sans-serif; cursor: pointer; }
+.hub-feedback-item__actions button:disabled { opacity: .55; cursor: wait; }
 .hub-feedback-item__actions button:first-child { border-color: #17505c; background: #17505c; color: #fff; }
 .hub-feedback-item__actions .is-delete { margin-left: auto; border-color: #d9aaa5; color: #8b2c24; }
 .hub-feedback-item__actions button:focus-visible,

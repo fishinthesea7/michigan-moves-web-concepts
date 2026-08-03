@@ -23,6 +23,7 @@ docs/
 ├── 404.html
 ├── assets/
 │   ├── hub.css
+│   ├── feedback-config.js
 │   ├── feedback.css
 │   ├── prototype.css
 │   ├── feedback.js
@@ -36,6 +37,9 @@ docs/
 └── directory/
     ├── variation-a/index.html
     └── variation-b/index.html
+
+supabase/
+└── feedback-schema.sql
 ```
 
 There is no build step, static-site generator, paid service, custom domain, or custom GitHub Actions workflow.
@@ -49,7 +53,7 @@ The intended repository is public and named `michigan-moves-web-concepts`.
 - Publishing folder: `/docs`
 - Custom domain: none
 
-The connected GitHub account is `fishinthesea7`. The available connector cannot create repositories or configure Pages, and the local GitHub CLI is not installed, so the one-time repository and Pages setup below remains required.
+The repository is `fishinthesea7/michigan-moves-web-concepts`, and GitHub Pages is configured to publish the canonical `docs/` folder from `main`.
 
 ### Hub URL
 
@@ -75,30 +79,52 @@ Each hosted prototype includes a lightweight annotation layer for review:
 - Use the Feedback disclosure attached to each hub card to review or edit that page’s comments.
 - Hub Feedback disclosures open downward in the page flow. They push lower cards down, stop at roughly one card’s depth, and scroll internally when feedback is longer.
 - Text entered in a prototype editor or hub edit form is saved continuously and recovered after a reload or browser restart, even before Save is selected.
+- Saved comments are loaded from one shared database, so a comment created or edited on one device appears on another device after refresh, refocus, or the short background refresh interval.
 
-`docs/assets/feedback.js` owns the shared data model and behavior. Each prototype supplies a stable `data-feedback-page` identifier on `<body>`, and the matching hub disclosure uses the same identifier. Saved comments use the `mmcPrototypeFeedbackV1` local-storage key; unfinished drafts use `mmcPrototypeFeedbackDraftsV1`. Saved edits synchronize between open hub and prototype tabs through browser storage events.
+`docs/assets/feedback.js` owns the shared data model and behavior. Each prototype supplies a stable `data-feedback-page` identifier on `<body>`, and the matching hub disclosure uses the same identifier. Shared connection values live in `docs/assets/feedback-config.js`, and the database definition and row-level policies live in `supabase/feedback-schema.sql`.
 
-This remains a no-backend review aid. Comments and drafts persist only in the browser and device where they were created; they are not submitted to GitHub, emailed, or shared with reviewers on other devices. Clearing site data removes them. Cross-device comments and notifications require a separately approved database, server-side email workflow, and a secure method for distinguishing the site owner from other reviewers. A webpage cannot silently read a visitor’s Google account or otherwise reliably identify a real person without an authentication or owner-token mechanism.
+Unfinished drafts intentionally remain browser-local under `mmcPrototypeFeedbackDraftsV1` until Save is selected. The most recent shared results are cached under `mmcPrototypeSharedFeedbackCacheV1` so the interface can show its last known state during a temporary connection problem. Comments made before shared storage was enabled remain under `mmcPrototypeFeedbackV1`; when found, the interface offers an explicit **Publish to shared review** control rather than uploading them silently.
 
-## One-time GitHub setup
+There are no email notifications, identity prompts, owner tokens, or user accounts. Consequently, this is an open collaborative review surface: anyone who has the public GitHub Pages URL can read, create, edit, or delete comments. Do not place sensitive, personal, or confidential information in comments.
 
-1. On GitHub, create a **public** repository named `michigan-moves-web-concepts`. Do not initialize it with a README, license, or `.gitignore` because this local repository already contains the project history.
-2. From the project folder, add the new repository as the only remote:
+### Shared-comment configuration
 
-   ```bash
-   git remote add origin https://github.com/fishinthesea7/michigan-moves-web-concepts.git
+The current public prototype is connected to its dedicated Supabase project through the public values in `docs/assets/feedback-config.js`. The following steps are required only when rebuilding or replacing that database:
+
+1. Create a Supabase project dedicated to these public prototype comments.
+2. In its SQL Editor, run the complete [`supabase/feedback-schema.sql`](supabase/feedback-schema.sql) file.
+3. In the project’s Connect dialog or **Settings → API Keys**, copy the Project URL and the `sb_publishable_...` key.
+4. Add those two public values to `docs/assets/feedback-config.js`:
+
+   ```js
+   window.MMC_FEEDBACK_CONFIG = {
+     supabaseUrl: 'https://PROJECT-REF.supabase.co',
+     supabasePublishableKey: 'sb_publishable_REPLACE_ME',
+     table: 'prototype_comments',
+     pollIntervalMs: 15000
+   };
    ```
 
-3. Push the prepared `main` branch:
+5. Never place a Supabase secret key, legacy `service_role` key, database password, or access token in this repository.
+6. Serve `docs/` locally and verify create, refresh, edit, and delete from two different browser origins or devices before publishing.
 
-   ```bash
-   git push -u origin main
-   ```
+If the Project URL or publishable key is removed, the UI clearly reports that shared storage is pending and retains browser-local behavior rather than pretending comments are cross-device.
 
-4. In the repository, open **Settings → Pages**.
-5. Under **Build and deployment**, choose **Deploy from a branch**.
-6. Select **main** and **/docs**, then choose **Save**.
-7. Wait for GitHub Pages to report the published URL, then open the hub and four direct URLs above.
+## GitHub deployment
+
+The existing remote is:
+
+```text
+https://github.com/fishinthesea7/michigan-moves-web-concepts.git
+```
+
+Publish an approved update without changing any stable URL by committing the existing files and pushing `main`:
+
+```bash
+git push origin main
+```
+
+GitHub Pages then republishes `main` → `/docs`. If that configuration is ever lost, restore it under **Settings → Pages → Deploy from a branch → main → /docs**.
 
 Do not add GitHub credentials, personal access tokens, or private keys to this repository.
 

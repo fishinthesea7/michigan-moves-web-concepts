@@ -13,5 +13,7 @@ Future Codex-created webpage prototypes in this project must:
 7. Preserve the existing stable URL when updating a prototype.
 8. Never deploy to `mimoves.org` without separate, explicit authorization.
 9. Include the shared review feedback assets, a stable `data-feedback-page` identifier, and a matching feedback disclosure on the hub card.
+10. Add each new feedback page identifier to the allowlist constraint in `supabase/feedback-schema.sql` before publishing it.
+11. Preserve shared cross-device comments and browser-local draft recovery; do not add notifications, identity prompts, user accounts, or owner-token behavior unless the user separately authorizes that change.
 
 The `docs/` tree is canonical. Do not keep duplicate prototype HTML or shared assets elsewhere in the repository where copies could drift.

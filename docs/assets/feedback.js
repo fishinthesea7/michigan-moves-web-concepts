@@ -3,9 +3,36 @@
 
   var STORAGE_KEY = 'mmcPrototypeFeedbackV1';
   var DRAFT_STORAGE_KEY = 'mmcPrototypeFeedbackDraftsV1';
+  var SHARED_CACHE_KEY = 'mmcPrototypeSharedFeedbackCacheV1';
   var CHANGE_EVENT = 'mmc-feedback-changed';
   var fallbackStore = { version: 1, pages: {} };
   var fallbackDraftStore = { version: 1, pages: {} };
+  var fallbackSharedStore = { version: 1, pages: {} };
+  var sharedConfig = normalizeSharedConfig(window.MMC_FEEDBACK_CONFIG);
+  var sharedPages = [];
+  var sharedPollTimer = null;
+  var sharedRequestInFlight = null;
+  var sharedStatus = sharedConfig.enabled ? 'connecting' : 'local';
+  var sharedStatusMessage = '';
+
+  function normalizeSharedConfig(value) {
+    var config = value && typeof value === 'object' ? value : {};
+    var url = typeof config.supabaseUrl === 'string'
+      ? config.supabaseUrl.trim().replace(/\/rest\/v1\/?$/i, '').replace(/\/$/, '')
+      : '';
+    var key = typeof config.supabasePublishableKey === 'string' ? config.supabasePublishableKey.trim() : '';
+    var table = typeof config.table === 'string' && /^[a-z0-9_]+$/i.test(config.table) ? config.table : 'prototype_comments';
+    var interval = Number(config.pollIntervalMs);
+    var validHostedUrl = /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url);
+    var validLocalTestUrl = config.allowLocalTesting === true && /^http:\/\/(127\.0\.0\.1|localhost):\d+$/i.test(url);
+    return {
+      enabled: (validHostedUrl || validLocalTestUrl) && /^sb_publishable_/.test(key),
+      url: url,
+      key: key,
+      table: table,
+      pollIntervalMs: Number.isFinite(interval) ? Math.max(10000, interval) : 15000
+    };
+  }
 
   function cleanStore(value) {
     if (!value || typeof value !== 'object') return { version: 1, pages: {} };
@@ -30,6 +57,26 @@
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(fallbackStore));
     } catch (error) {
       // The in-memory fallback keeps the interface usable when storage is blocked.
+    }
+    window.dispatchEvent(new CustomEvent(CHANGE_EVENT, { detail: { pageId: pageId } }));
+  }
+
+  function readSharedStore() {
+    try {
+      var saved = window.localStorage.getItem(SHARED_CACHE_KEY);
+      fallbackSharedStore = cleanStore(saved ? JSON.parse(saved) : fallbackSharedStore);
+    } catch (error) {
+      fallbackSharedStore = cleanStore(fallbackSharedStore);
+    }
+    return fallbackSharedStore;
+  }
+
+  function writeSharedStore(store, pageId) {
+    fallbackSharedStore = cleanStore(store);
+    try {
+      window.localStorage.setItem(SHARED_CACHE_KEY, JSON.stringify(fallbackSharedStore));
+    } catch (error) {
+      // The in-memory shared cache still keeps the current page synchronized.
     }
     window.dispatchEvent(new CustomEvent(CHANGE_EVENT, { detail: { pageId: pageId } }));
   }
@@ -102,14 +149,22 @@
     return page;
   }
 
-  function getComments(pageId) {
-    var page = ensurePage(readStore(), pageId);
+  function commentsFromPage(page) {
     return page.comments
       .filter(function (comment) {
         return comment && typeof comment.id === 'string' && typeof comment.text === 'string';
       })
       .slice()
       .sort(function (a, b) { return a.number - b.number; });
+  }
+
+  function getLocalComments(pageId) {
+    return commentsFromPage(ensurePage(readStore(), pageId));
+  }
+
+  function getComments(pageId) {
+    var source = sharedConfig.enabled ? readSharedStore() : readStore();
+    return commentsFromPage(ensurePage(source, pageId));
   }
 
   function makeId() {
@@ -119,7 +174,7 @@
     return 'comment-' + Date.now() + '-' + Math.random().toString(16).slice(2);
   }
 
-  function createComment(pageId, values) {
+  function createLocalComment(pageId, values) {
     var store = readStore();
     var page = ensurePage(store, pageId);
     var now = new Date().toISOString();
@@ -138,7 +193,7 @@
     return comment;
   }
 
-  function updateComment(pageId, commentId, values) {
+  function updateLocalComment(pageId, commentId, values) {
     var store = readStore();
     var page = ensurePage(store, pageId);
     var comment = page.comments.find(function (item) { return item.id === commentId; });
@@ -151,7 +206,7 @@
     return comment;
   }
 
-  function deleteComment(pageId, commentId) {
+  function deleteLocalComment(pageId, commentId) {
     var store = readStore();
     var page = ensurePage(store, pageId);
     var originalLength = page.comments.length;
@@ -162,10 +217,277 @@
     return true;
   }
 
+  function registerSharedPage(pageId) {
+    if (typeof pageId !== 'string' || sharedPages.indexOf(pageId) !== -1) return;
+    sharedPages.push(pageId);
+  }
+
+  function sharedStatusText() {
+    if (!sharedConfig.enabled) return 'Shared comments are awaiting database setup. Comments currently remain in this browser.';
+    if (sharedStatus === 'connecting') return 'Connecting to shared comments…';
+    if (sharedStatus === 'error') return sharedStatusMessage || 'Shared comments could not be reached. Showing the most recent saved copy.';
+    return 'Saved comments sync across devices. Unfinished text remains in this browser until Save is selected.';
+  }
+
+  function renderSharedStatus() {
+    document.querySelectorAll('[data-feedback-sync-status]').forEach(function (element) {
+      element.textContent = sharedStatusText();
+      element.classList.toggle('is-error', sharedStatus === 'error');
+      element.classList.toggle('is-ready', sharedStatus === 'ready');
+    });
+  }
+
+  function setSharedStatus(status, message) {
+    sharedStatus = status;
+    sharedStatusMessage = message || '';
+    renderSharedStatus();
+  }
+
+  function mapSharedRow(row) {
+    return {
+      id: String(row.id),
+      number: Number(row.comment_number),
+      text: String(row.text || ''),
+      xPercent: Number(row.x_percent),
+      y: Number(row.y),
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
+    };
+  }
+
+  function sharedHeaders(prefer) {
+    var headers = {
+      apikey: sharedConfig.key,
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    };
+    if (prefer) headers.Prefer = prefer;
+    return headers;
+  }
+
+  async function sharedRequest(path, options) {
+    var request = options || {};
+    var response;
+    try {
+      response = await window.fetch(sharedConfig.url + '/rest/v1/' + path, {
+        method: request.method || 'GET',
+        headers: sharedHeaders(request.prefer),
+        body: request.body ? JSON.stringify(request.body) : undefined,
+        cache: 'no-store'
+      });
+    } catch (error) {
+      throw new Error('Shared comments are temporarily unreachable. Your unfinished text is still saved in this browser.');
+    }
+
+    var responseText = await response.text();
+    var data = null;
+    if (responseText) {
+      try { data = JSON.parse(responseText); } catch (error) { data = null; }
+    }
+    if (!response.ok) {
+      var detail = data && (data.message || data.hint || data.details);
+      throw new Error(detail || 'The shared comment service returned an error.');
+    }
+    return data;
+  }
+
+  function replaceSharedRows(rows) {
+    var store = { version: 1, pages: {} };
+    sharedPages.forEach(function (pageId) { ensurePage(store, pageId); });
+    (Array.isArray(rows) ? rows : []).forEach(function (row) {
+      var pageId = String(row.page_id || '');
+      if (!pageId) return;
+      ensurePage(store, pageId).comments.push(mapSharedRow(row));
+    });
+    Object.keys(store.pages).forEach(function (pageId) { ensurePage(store, pageId); });
+    writeSharedStore(store, 'all');
+  }
+
+  function upsertSharedRow(row) {
+    var pageId = String(row.page_id || '');
+    var comment = mapSharedRow(row);
+    var store = readSharedStore();
+    var page = ensurePage(store, pageId);
+    var index = page.comments.findIndex(function (item) { return item.id === comment.id; });
+    if (index === -1) page.comments.push(comment);
+    else page.comments[index] = comment;
+    ensurePage(store, pageId);
+    writeSharedStore(store, pageId);
+    return comment;
+  }
+
+  async function refreshSharedComments() {
+    if (!sharedConfig.enabled) {
+      setSharedStatus('local');
+      return getComments(sharedPages[0] || '');
+    }
+    if (sharedRequestInFlight) return sharedRequestInFlight;
+
+    if (sharedStatus !== 'ready') setSharedStatus('connecting');
+    var fields = 'id,page_id,comment_number,text,x_percent,y,created_at,updated_at';
+    sharedRequestInFlight = sharedRequest(
+      encodeURIComponent(sharedConfig.table) + '?select=' + fields + '&order=page_id.asc,comment_number.asc&limit=1000'
+    ).then(function (rows) {
+      replaceSharedRows(rows);
+      setSharedStatus('ready');
+      return rows;
+    }).catch(function (error) {
+      setSharedStatus('error', error.message);
+      throw error;
+    }).finally(function () {
+      sharedRequestInFlight = null;
+    });
+    return sharedRequestInFlight;
+  }
+
+  function startSharedSync() {
+    renderSharedStatus();
+    if (!sharedConfig.enabled) return;
+    refreshSharedComments().catch(function () { /* Status is shown in the interface. */ });
+    if (!sharedPollTimer) {
+      sharedPollTimer = window.setInterval(function () {
+        if (document.visibilityState === 'visible') {
+          refreshSharedComments().catch(function () { /* Status is shown in the interface. */ });
+        }
+      }, sharedConfig.pollIntervalMs);
+      window.addEventListener('focus', function () {
+        refreshSharedComments().catch(function () { /* Status is shown in the interface. */ });
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') {
+          refreshSharedComments().catch(function () { /* Status is shown in the interface. */ });
+        }
+      });
+    }
+  }
+
+  async function createSharedComment(pageId, values) {
+    var fields = 'id,page_id,comment_number,text,x_percent,y,created_at,updated_at';
+    var rows = await sharedRequest(
+      encodeURIComponent(sharedConfig.table) + '?select=' + fields,
+      {
+        method: 'POST',
+        prefer: 'return=representation',
+        body: {
+          page_id: pageId,
+          text: values.text.trim().slice(0, 5000),
+          x_percent: Math.max(0, Math.min(100, Number(values.xPercent))),
+          y: Math.max(0, Math.min(100000, Number(values.y)))
+        }
+      }
+    );
+    if (!Array.isArray(rows) || !rows[0]) throw new Error('The shared comment was not returned after saving.');
+    setSharedStatus('ready');
+    clearDraft(pageId);
+    return upsertSharedRow(rows[0]);
+  }
+
+  async function updateSharedComment(pageId, commentId, values) {
+    var fields = 'id,page_id,comment_number,text,x_percent,y,created_at,updated_at';
+    var body = {};
+    if (typeof values.text === 'string') body.text = values.text.trim().slice(0, 5000);
+    if (Number.isFinite(values.xPercent)) body.x_percent = Math.max(0, Math.min(100, values.xPercent));
+    if (Number.isFinite(values.y)) body.y = Math.max(0, Math.min(100000, values.y));
+    var rows = await sharedRequest(
+      encodeURIComponent(sharedConfig.table) + '?id=eq.' + encodeURIComponent(commentId) + '&page_id=eq.' + encodeURIComponent(pageId) + '&select=' + fields,
+      { method: 'PATCH', prefer: 'return=representation', body: body }
+    );
+    if (!Array.isArray(rows) || !rows[0]) throw new Error('The shared comment could not be found for editing.');
+    setSharedStatus('ready');
+    clearDraft(pageId, commentId);
+    return upsertSharedRow(rows[0]);
+  }
+
+  async function deleteSharedComment(pageId, commentId) {
+    var rows = await sharedRequest(
+      encodeURIComponent(sharedConfig.table) + '?id=eq.' + encodeURIComponent(commentId) + '&page_id=eq.' + encodeURIComponent(pageId) + '&select=id,page_id',
+      { method: 'DELETE', prefer: 'return=representation' }
+    );
+    if (!Array.isArray(rows) || !rows[0]) throw new Error('The shared comment could not be found for deletion.');
+    clearDraft(pageId, commentId);
+    var store = readSharedStore();
+    var page = ensurePage(store, pageId);
+    page.comments = page.comments.filter(function (item) { return item.id !== commentId; });
+    writeSharedStore(store, pageId);
+    setSharedStatus('ready');
+    return true;
+  }
+
+  async function createComment(pageId, values) {
+    if (!sharedConfig.enabled) {
+      clearDraft(pageId);
+      return createLocalComment(pageId, values);
+    }
+    return createSharedComment(pageId, values);
+  }
+
+  async function updateComment(pageId, commentId, values) {
+    if (!sharedConfig.enabled) {
+      clearDraft(pageId, commentId);
+      return updateLocalComment(pageId, commentId, values);
+    }
+    return updateSharedComment(pageId, commentId, values);
+  }
+
+  async function deleteComment(pageId, commentId) {
+    if (!sharedConfig.enabled) {
+      clearDraft(pageId, commentId);
+      return deleteLocalComment(pageId, commentId);
+    }
+    return deleteSharedComment(pageId, commentId);
+  }
+
+  async function publishLocalComments(pageId) {
+    if (!sharedConfig.enabled) throw new Error('Shared comments are not configured yet.');
+    var comments = getLocalComments(pageId);
+    var published = 0;
+    for (var index = 0; index < comments.length; index += 1) {
+      var comment = comments[index];
+      await createSharedComment(pageId, {
+        text: comment.text,
+        xPercent: comment.xPercent,
+        y: comment.y
+      });
+      deleteLocalComment(pageId, comment.id);
+      published += 1;
+    }
+    await refreshSharedComments();
+    return published;
+  }
+
+  function renderMigrationControl(container, pageId) {
+    if (!container) return;
+    var localComments = getLocalComments(pageId);
+    container.hidden = !sharedConfig.enabled || !localComments.length;
+    if (container.hidden) return;
+    var copy = container.querySelector('[data-feedback-migration-copy]');
+    var migrationButton = container.querySelector('[data-feedback-migration-button]');
+    var countLabel = localComments.length === 1 ? '1 browser-only comment' : localComments.length + ' browser-only comments';
+    copy.textContent = countLabel + ' can be added to the shared review.';
+    migrationButton.textContent = 'Publish to shared review';
+    migrationButton.disabled = false;
+    if (migrationButton.getAttribute('data-feedback-migration-bound') === 'true') return;
+    migrationButton.setAttribute('data-feedback-migration-bound', 'true');
+    migrationButton.addEventListener('click', async function () {
+      migrationButton.disabled = true;
+      migrationButton.textContent = 'Publishing…';
+      try {
+        await publishLocalComments(pageId);
+        container.hidden = true;
+      } catch (error) {
+        copy.textContent = error.message || 'The browser-only comments could not be published.';
+        copy.classList.add('is-error');
+        migrationButton.textContent = 'Try again';
+        migrationButton.disabled = false;
+        setSharedStatus('error', error.message);
+      }
+    });
+  }
+
   function subscribe(callback) {
     window.addEventListener(CHANGE_EVENT, callback);
     window.addEventListener('storage', function (event) {
-      if (event.key === STORAGE_KEY) callback();
+      if (event.key === STORAGE_KEY || event.key === SHARED_CACHE_KEY) callback();
     });
   }
 
@@ -178,6 +500,7 @@
   }
 
   function initPrototypeFeedback(pageId, pageTitle) {
+    registerSharedPage(pageId);
     var layer = document.createElement('div');
     layer.className = 'mmc-feedback-layer';
     layer.setAttribute('data-preview-only', '');
@@ -200,9 +523,13 @@
         '</div>' +
         '<div class="mmc-feedback-drawer__scroll">' +
           '<p class="mmc-feedback-drawer__instructions"><strong>Right-click or double-click</strong> non-interactive page content to add a pinned comment. Drag the editor header to move it, then select Save.</p>' +
-          '<p class="mmc-feedback-drawer__storage">Saved comments and in-progress drafts remain in this browser on this device.</p>' +
+          '<p class="mmc-feedback-drawer__storage" data-feedback-sync-status>Connecting to shared comments…</p>' +
+          '<div class="mmc-feedback-migration" data-feedback-migration hidden>' +
+            '<p data-feedback-migration-copy></p>' +
+            '<button type="button" data-feedback-migration-button>Publish to shared review</button>' +
+          '</div>' +
           '<div class="mmc-feedback-drawer__comments">' +
-            '<h2>Your comments <span data-feedback-drawer-count>0</span></h2>' +
+            '<h2>Page comments <span data-feedback-drawer-count>0</span></h2>' +
             '<ol data-feedback-drawer-list></ol>' +
           '</div>' +
         '</div>' +
@@ -259,6 +586,7 @@
 
     function renderDrawer() {
       var comments = getComments(pageId);
+      renderMigrationControl(drawer.querySelector('[data-feedback-migration]'), pageId);
       drawer.querySelector('[data-feedback-drawer-count]').textContent = String(comments.length);
       var list = drawer.querySelector('[data-feedback-drawer-list]');
       list.replaceChildren();
@@ -386,7 +714,7 @@
         persistActiveDraft();
       });
 
-      editor.querySelector('form').addEventListener('submit', function (event) {
+      editor.querySelector('form').addEventListener('submit', async function (event) {
         event.preventDefault();
         var text = textarea.value.trim();
         var error = editor.querySelector('.mmc-feedback-editor__error');
@@ -396,14 +724,25 @@
           return;
         }
         var xPercent = Math.max(0, Math.min(100, activeEditor.anchorX / pageWidth() * 100));
-        if (activeEditor.commentId) {
-          clearDraft(pageId, activeEditor.commentId);
-          updateComment(pageId, activeEditor.commentId, { text: text, xPercent: xPercent, y: activeEditor.anchorY });
-        } else {
-          clearDraft(pageId);
-          createComment(pageId, { text: text, xPercent: xPercent, y: activeEditor.anchorY });
+        var commentId = activeEditor.commentId;
+        var anchorY = activeEditor.anchorY;
+        var actionButtons = editor.querySelectorAll('.mmc-feedback-editor__actions button');
+        actionButtons.forEach(function (actionButton) { actionButton.disabled = true; });
+        activeEditor.draftStatus.textContent = sharedConfig.enabled ? 'Saving to shared review…' : 'Saving in this browser…';
+        try {
+          if (commentId) {
+            await updateComment(pageId, commentId, { text: text, xPercent: xPercent, y: anchorY });
+          } else {
+            await createComment(pageId, { text: text, xPercent: xPercent, y: anchorY });
+          }
+          clearDraft(pageId, commentId || undefined);
+          closeEditor();
+        } catch (saveError) {
+          error.textContent = saveError.message || 'The comment could not be saved.';
+          error.hidden = false;
+          activeEditor.draftStatus.textContent = 'Your unfinished text is still saved in this browser.';
+          actionButtons.forEach(function (actionButton) { actionButton.disabled = false; });
         }
-        closeEditor();
       });
 
       editor.querySelector('.mmc-feedback-editor__cancel').addEventListener('click', function () {
@@ -414,7 +753,7 @@
       if (deleteButton) {
         var deleteArmed = false;
         var deleteResetTimer = null;
-        deleteButton.addEventListener('click', function () {
+        deleteButton.addEventListener('click', async function () {
           if (!deleteArmed) {
             deleteArmed = true;
             deleteButton.textContent = 'Confirm delete';
@@ -425,9 +764,21 @@
             return;
           }
           if (deleteResetTimer) window.clearTimeout(deleteResetTimer);
-          clearDraft(pageId, existing.id);
-          deleteComment(pageId, existing.id);
-          closeEditor();
+          deleteButton.disabled = true;
+          activeEditor.draftStatus.textContent = sharedConfig.enabled ? 'Deleting from shared review…' : 'Deleting…';
+          try {
+            await deleteComment(pageId, existing.id);
+            clearDraft(pageId, existing.id);
+            closeEditor();
+          } catch (deleteError) {
+            var error = editor.querySelector('.mmc-feedback-editor__error');
+            error.textContent = deleteError.message || 'The comment could not be deleted.';
+            error.hidden = false;
+            activeEditor.draftStatus.textContent = 'The comment remains available.';
+            deleteButton.disabled = false;
+            deleteArmed = false;
+            deleteButton.textContent = 'Delete';
+          }
         });
       }
 
@@ -586,18 +937,34 @@
       form.hidden = true;
       display.hidden = false;
     });
-    form.addEventListener('submit', function (event) {
+    form.addEventListener('submit', async function (event) {
       event.preventDefault();
       if (!textarea.value.trim()) {
         textarea.focus();
         return;
       }
-      clearDraft(pageId, comment.id);
-      updateComment(pageId, comment.id, { text: textarea.value });
+      save.disabled = true;
+      cancel.disabled = true;
+      remove.disabled = true;
+      draftStatus.classList.remove('is-error');
+      draftStatus.textContent = sharedConfig.enabled ? 'Saving to shared review…' : 'Saving in this browser…';
+      try {
+        await updateComment(pageId, comment.id, { text: textarea.value });
+        clearDraft(pageId, comment.id);
+        form.hidden = true;
+        display.hidden = false;
+        renderHubPanel(item.closest('.hub-feedback[data-feedback-page]'));
+      } catch (error) {
+        draftStatus.textContent = error.message || 'The comment could not be saved.';
+        draftStatus.classList.add('is-error');
+        save.disabled = false;
+        cancel.disabled = false;
+        remove.disabled = false;
+      }
     });
     var removeArmed = false;
     var removeResetTimer = null;
-    remove.addEventListener('click', function () {
+    remove.addEventListener('click', async function () {
       if (!removeArmed) {
         removeArmed = true;
         remove.textContent = 'Confirm delete';
@@ -608,8 +975,25 @@
         return;
       }
       if (removeResetTimer) window.clearTimeout(removeResetTimer);
-      clearDraft(pageId, comment.id);
-      deleteComment(pageId, comment.id);
+      remove.disabled = true;
+      save.disabled = true;
+      cancel.disabled = true;
+      draftStatus.classList.remove('is-error');
+      draftStatus.textContent = sharedConfig.enabled ? 'Deleting from shared review…' : 'Deleting…';
+      try {
+        await deleteComment(pageId, comment.id);
+        clearDraft(pageId, comment.id);
+        form.hidden = true;
+        renderHubPanel(item.closest('.hub-feedback[data-feedback-page]'));
+      } catch (error) {
+        draftStatus.textContent = error.message || 'The comment could not be deleted.';
+        draftStatus.classList.add('is-error');
+        remove.disabled = false;
+        save.disabled = false;
+        cancel.disabled = false;
+        removeArmed = false;
+        remove.textContent = 'Delete';
+      }
     });
 
     item.append(display, form);
@@ -623,16 +1007,32 @@
     var list = panel.querySelector('[data-feedback-list]');
     var empty = panel.querySelector('[data-feedback-empty]');
     count.textContent = comments.length === 1 ? '1 comment' : comments.length + ' comments';
+    if (panel.querySelector('.hub-feedback-item__form:not([hidden])')) {
+      renderSharedStatus();
+      return;
+    }
     list.replaceChildren();
     empty.hidden = comments.length > 0;
+    var migration = panel.querySelector('[data-feedback-migration]');
+    if (!migration) {
+      migration = document.createElement('div');
+      migration.className = 'mmc-feedback-migration mmc-feedback-migration--hub';
+      migration.setAttribute('data-feedback-migration', '');
+      migration.hidden = true;
+      migration.innerHTML = '<p data-feedback-migration-copy></p><button type="button" data-feedback-migration-button>Publish to shared review</button>';
+      panel.querySelector('[data-feedback-sync-status]').insertAdjacentElement('afterend', migration);
+    }
+    renderMigrationControl(migration, pageId);
     comments.forEach(function (comment) {
       list.appendChild(createHubCommentItem(pageId, comment));
     });
+    renderSharedStatus();
   }
 
   function initHubFeedback() {
     var panels = Array.prototype.slice.call(document.querySelectorAll('.hub-feedback[data-feedback-page]'));
     if (!panels.length) return;
+    panels.forEach(function (panel) { registerSharedPage(panel.getAttribute('data-feedback-page')); });
     function renderAll() { panels.forEach(renderHubPanel); }
     subscribe(renderAll);
     renderAll();
@@ -641,11 +1041,16 @@
   window.MMCFeedback = {
     storageKey: STORAGE_KEY,
     draftStorageKey: DRAFT_STORAGE_KEY,
+    sharedCacheKey: SHARED_CACHE_KEY,
+    sharedEnabled: sharedConfig.enabled,
     getComments: getComments,
+    getLocalComments: getLocalComments,
     getDraft: getDraft,
     createComment: createComment,
     updateComment: updateComment,
-    deleteComment: deleteComment
+    deleteComment: deleteComment,
+    publishLocalComments: publishLocalComments,
+    refreshSharedComments: refreshSharedComments
   };
 
   var pageId = document.body.getAttribute('data-feedback-page');
@@ -653,4 +1058,5 @@
     initPrototypeFeedback(pageId, document.body.getAttribute('data-feedback-title') || 'Website concept');
   }
   initHubFeedback();
+  startSharedSync();
 })();

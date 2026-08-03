@@ -73,10 +73,12 @@ Each hosted prototype includes a lightweight annotation layer for review:
 - Select a numbered pin to reopen, edit, move, or delete its comment.
 - Use the right-side feedback bookmark to review all comments on the current page in creation order.
 - Use the Feedback disclosure attached to each hub card to review or edit that page’s comments.
+- Hub Feedback disclosures open downward in the page flow. They push lower cards down, stop at roughly one card’s depth, and scroll internally when feedback is longer.
+- Text entered in a prototype editor or hub edit form is saved continuously and recovered after a reload or browser restart, even before Save is selected.
 
-`docs/assets/feedback.js` owns the shared data model and behavior. Each prototype supplies a stable `data-feedback-page` identifier on `<body>`, and the matching hub disclosure uses the same identifier. Data is stored under the `mmcPrototypeFeedbackV1` local-storage key, so edits synchronize between open hub and prototype tabs through browser storage events.
+`docs/assets/feedback.js` owns the shared data model and behavior. Each prototype supplies a stable `data-feedback-page` identifier on `<body>`, and the matching hub disclosure uses the same identifier. Saved comments use the `mmcPrototypeFeedbackV1` local-storage key; unfinished drafts use `mmcPrototypeFeedbackDraftsV1`. Saved edits synchronize between open hub and prototype tabs through browser storage events.
 
-This is intentionally a no-backend review aid. Comments exist only in the browser and device where they were created; they are not submitted to GitHub, emailed, or shared with reviewers on other devices. Clearing site data removes them.
+This remains a no-backend review aid. Comments and drafts persist only in the browser and device where they were created; they are not submitted to GitHub, emailed, or shared with reviewers on other devices. Clearing site data removes them. Cross-device comments and notifications require a separately approved database, server-side email workflow, and a secure method for distinguishing the site owner from other reviewers. A webpage cannot silently read a visitor’s Google account or otherwise reliably identify a real person without an authentication or owner-token mechanism.
 
 ## One-time GitHub setup
 

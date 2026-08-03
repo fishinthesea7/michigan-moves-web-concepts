@@ -40,6 +40,10 @@ a:focus-visible { outline: 3px solid #eeae68; outline-offset: 3px; }
 @media (min-width: 900px) and (min-height: 680px) {
   body { overflow: hidden; }
   .hub-shell { height: 100vh; }
+  body:has(.hub-feedback[open]) { overflow-y: auto; }
+  .hub-shell:has(.hub-feedback[open]) { height: auto; min-height: 100vh; grid-template-rows: auto auto auto; }
+  .hub-grid:has(.hub-feedback[open]) { grid-template-rows: auto auto; align-items: start; }
+  .hub-grid:has(.hub-feedback[open]) .hub-card { min-height: clamp(200px, calc((100vh - 250px) / 2), 280px); }
 }
 
 @media (max-height: 760px) and (min-width: 900px) {

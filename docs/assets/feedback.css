@@ -70,6 +70,7 @@
 }
 .mmc-feedback-editor textarea:focus { outline: 3px solid rgba(238,174,104,.45); border-color: #17505c; }
 .mmc-feedback-editor__error { margin: 6px 0 0; color: #9d2c23; font-size: 12px; }
+.mmc-feedback-editor__draft-status { margin: 6px 0 0; color: #65787c; font-size: 11px; }
 .mmc-feedback-editor__actions { margin-top: 10px; display: flex; align-items: center; gap: 7px; }
 .mmc-feedback-editor__actions button { min-height: 34px; padding: 7px 11px; border: 1px solid #b9c9cb; border-radius: 4px; background: #fff; color: #17505c; font: 750 12px/1 Inter, Arial, sans-serif; cursor: pointer; }
 .mmc-feedback-editor__actions button:hover { background: #f2f6f5; }
@@ -132,29 +133,27 @@
 .mmc-feedback-drawer__empty { color: #6d7d80; font-size: 12px; }
 
 /* Hub feedback tabs */
-.hub-concept { position: relative; min-width: 0; min-height: 0; }
-.hub-concept > .hub-card { height: 100%; padding-bottom: 52px; }
+.hub-concept { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.hub-concept > .hub-card { min-height: 0; flex: 1 1 auto; }
 .hub-feedback {
-  position: absolute;
-  z-index: 3;
-  right: 0;
-  bottom: 0;
-  left: 6px;
-  max-height: calc(100% - 14px);
+  flex: 0 0 auto;
+  margin-left: 6px;
+  border: 1px solid #cbd8d9;
+  border-top: 0;
   border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  background: #fff;
   color: #1a2b2e;
   font-family: Inter, Arial, sans-serif;
 }
-.hub-feedback[open] { display: flex; flex-direction: column; border-top: 1px solid #cbd8d9; background: #fff; box-shadow: 0 -10px 22px rgba(15,56,64,.13); }
+.hub-feedback[open] { box-shadow: 0 8px 18px rgba(15,56,64,.10); }
 .hub-feedback summary {
-  order: 2;
   min-height: 34px;
   padding: 8px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border-top: 1px solid #dce4e4;
   border-radius: 0 0 8px 8px;
   background: #f4f7f6;
   color: #17505c;
@@ -164,13 +163,21 @@
   list-style: none;
 }
 .hub-feedback summary::-webkit-details-marker { display: none; }
-.hub-feedback summary::before { content: '▴'; margin-right: -4px; color: #b27334; }
-.hub-feedback[open] summary::before { content: '▾'; }
+.hub-feedback summary::before { content: '▾'; margin-right: -4px; color: #b27334; }
+.hub-feedback[open] summary { border-radius: 0; }
+.hub-feedback[open] summary::before { content: '▴'; }
 .hub-feedback summary:hover { background: #edf3f2; }
 .hub-feedback summary:focus-visible { outline: 3px solid #eeae68; outline-offset: -3px; }
 .hub-feedback summary span:first-of-type { margin-right: auto; text-transform: uppercase; letter-spacing: .07em; }
 .hub-feedback summary span:last-child { color: #65787c; font-weight: 650; }
-.hub-feedback__panel { order: 1; min-height: 0; padding: 12px 14px; overflow-y: auto; overscroll-behavior: contain; }
+.hub-feedback__panel {
+  max-height: clamp(190px, calc((100vh - 260px) / 2), 300px);
+  min-height: 0;
+  padding: 12px 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-top: 1px solid #dce4e4;
+}
 .hub-feedback__note { margin: 0 0 9px; color: #65787c; font-size: 10px; }
 .hub-feedback__empty { margin: 0; color: #4a6068; font-size: 11px; line-height: 1.45; }
 .hub-feedback__list { margin: 0; padding: 0; display: grid; gap: 8px; list-style: none; }
@@ -181,6 +188,7 @@
 .hub-feedback-item__edit { padding: 2px 0; border: 0; background: transparent; color: #17505c; font: 750 10px/1 Inter, Arial, sans-serif; text-decoration: underline; cursor: pointer; }
 .hub-feedback-item__form textarea { width: 100%; min-height: 64px; padding: 7px; resize: vertical; border: 1px solid #9eb3b6; border-radius: 4px; color: #1a2b2e; font: 11px/1.4 Inter, Arial, sans-serif; }
 .hub-feedback-item__form textarea:focus { outline: 3px solid rgba(238,174,104,.45); border-color: #17505c; }
+.hub-feedback-item__draft-status { margin: 4px 0 0; color: #65787c; font-size: 9px; }
 .hub-feedback-item__actions { margin-top: 6px; display: flex; gap: 5px; }
 .hub-feedback-item__actions button { min-height: 27px; padding: 5px 8px; border: 1px solid #b9c9cb; border-radius: 3px; background: #fff; color: #17505c; font: 700 10px/1 Inter, Arial, sans-serif; cursor: pointer; }
 .hub-feedback-item__actions button:first-child { border-color: #17505c; background: #17505c; color: #fff; }

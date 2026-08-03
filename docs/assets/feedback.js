@@ -2,8 +2,10 @@
   'use strict';
 
   var STORAGE_KEY = 'mmcPrototypeFeedbackV1';
+  var DRAFT_STORAGE_KEY = 'mmcPrototypeFeedbackDraftsV1';
   var CHANGE_EVENT = 'mmc-feedback-changed';
   var fallbackStore = { version: 1, pages: {} };
+  var fallbackDraftStore = { version: 1, pages: {} };
 
   function cleanStore(value) {
     if (!value || typeof value !== 'object') return { version: 1, pages: {} };
@@ -30,6 +32,59 @@
       // The in-memory fallback keeps the interface usable when storage is blocked.
     }
     window.dispatchEvent(new CustomEvent(CHANGE_EVENT, { detail: { pageId: pageId } }));
+  }
+
+  function readDraftStore() {
+    try {
+      var saved = window.localStorage.getItem(DRAFT_STORAGE_KEY);
+      fallbackDraftStore = cleanStore(saved ? JSON.parse(saved) : fallbackDraftStore);
+    } catch (error) {
+      fallbackDraftStore = cleanStore(fallbackDraftStore);
+    }
+    return fallbackDraftStore;
+  }
+
+  function getDraft(pageId) {
+    var draft = readDraftStore().pages[pageId];
+    if (!draft || typeof draft !== 'object' || typeof draft.text !== 'string') return null;
+    return {
+      commentId: typeof draft.commentId === 'string' ? draft.commentId : null,
+      text: draft.text,
+      xPercent: Number.isFinite(Number(draft.xPercent)) ? Number(draft.xPercent) : 50,
+      y: Number.isFinite(Number(draft.y)) ? Number(draft.y) : 80,
+      updatedAt: typeof draft.updatedAt === 'string' ? draft.updatedAt : ''
+    };
+  }
+
+  function saveDraft(pageId, values) {
+    var store = readDraftStore();
+    store.pages[pageId] = {
+      commentId: typeof values.commentId === 'string' ? values.commentId : null,
+      text: typeof values.text === 'string' ? values.text : '',
+      xPercent: Number.isFinite(Number(values.xPercent)) ? Number(values.xPercent) : 50,
+      y: Number.isFinite(Number(values.y)) ? Number(values.y) : 80,
+      updatedAt: new Date().toISOString()
+    };
+    fallbackDraftStore = cleanStore(store);
+    try {
+      window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(fallbackDraftStore));
+    } catch (error) {
+      // The in-memory fallback keeps draft recovery available for this page view.
+    }
+  }
+
+  function clearDraft(pageId, commentId) {
+    var store = readDraftStore();
+    var existing = store.pages[pageId];
+    if (!existing) return;
+    if (typeof commentId === 'string' && existing.commentId !== commentId) return;
+    delete store.pages[pageId];
+    fallbackDraftStore = cleanStore(store);
+    try {
+      window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(fallbackDraftStore));
+    } catch (error) {
+      // Keep the cleared in-memory state when storage is blocked.
+    }
   }
 
   function ensurePage(store, pageId) {
@@ -145,7 +200,7 @@
         '</div>' +
         '<div class="mmc-feedback-drawer__scroll">' +
           '<p class="mmc-feedback-drawer__instructions"><strong>Right-click or double-click</strong> non-interactive page content to add a pinned comment. Drag the editor header to move it, then select Save.</p>' +
-          '<p class="mmc-feedback-drawer__storage">Comments are saved in this browser on this device.</p>' +
+          '<p class="mmc-feedback-drawer__storage">Saved comments and in-progress drafts remain in this browser on this device.</p>' +
           '<div class="mmc-feedback-drawer__comments">' +
             '<h2>Your comments <span data-feedback-drawer-count>0</span></h2>' +
             '<ol data-feedback-drawer-list></ol>' +
@@ -239,6 +294,17 @@
       activeEditor = null;
     }
 
+    function persistActiveDraft() {
+      if (!activeEditor || !activeEditor.textarea) return;
+      saveDraft(pageId, {
+        commentId: activeEditor.commentId,
+        text: activeEditor.textarea.value,
+        xPercent: Math.max(0, Math.min(100, activeEditor.anchorX / pageWidth() * 100)),
+        y: activeEditor.anchorY
+      });
+      if (activeEditor.draftStatus) activeEditor.draftStatus.textContent = 'Draft saved automatically in this browser.';
+    }
+
     function editorPlacement(anchorX, anchorY, width, height) {
       var minimumLeft = window.scrollX + 12;
       var maximumLeft = window.scrollX + window.innerWidth - width - 12;
@@ -261,16 +327,20 @@
       activeEditor.anchorX = nextLeft;
       activeEditor.anchorY = nextTop;
       activeEditor.dragged = true;
+      persistActiveDraft();
     }
 
-    function openEditor(comment, point) {
+    function openEditor(comment, point, restoredDraft) {
       closeEditor();
       var existing = comment || null;
       var comments = getComments(pageId);
       var number = existing ? existing.number : comments.reduce(function (highest, item) {
         return Math.max(highest, item.number);
       }, 0) + 1;
-      var anchor = existing ? markerPosition(existing) : point;
+      var anchor = restoredDraft ? {
+        x: pageWidth() * restoredDraft.xPercent / 100,
+        y: restoredDraft.y
+      } : existing ? markerPosition(existing) : point;
       var editor = document.createElement('section');
       editor.className = 'mmc-feedback-editor';
       editor.setAttribute('role', 'dialog');
@@ -285,6 +355,7 @@
           '<label for="mmc-feedback-text">Feedback</label>' +
           '<textarea id="mmc-feedback-text" rows="5" required placeholder="Type your feedback here..."></textarea>' +
           '<p class="mmc-feedback-editor__error" role="alert" hidden>Please enter a comment before saving.</p>' +
+          '<p class="mmc-feedback-editor__draft-status" aria-live="polite">Changes save automatically in this browser.</p>' +
           '<div class="mmc-feedback-editor__actions">' +
             '<button class="mmc-feedback-editor__save" type="submit">Save</button>' +
             '<button class="mmc-feedback-editor__cancel" type="button">Cancel</button>' +
@@ -301,12 +372,19 @@
         commentId: existing ? existing.id : null,
         anchorX: anchor.x,
         anchorY: anchor.y,
-        dragged: false
+        dragged: false,
+        textarea: null,
+        draftStatus: editor.querySelector('.mmc-feedback-editor__draft-status')
       };
 
       var textarea = editor.querySelector('textarea');
-      textarea.value = existing ? existing.text : '';
+      activeEditor.textarea = textarea;
+      textarea.value = restoredDraft ? restoredDraft.text : existing ? existing.text : '';
       textarea.focus();
+      textarea.addEventListener('input', function () {
+        editor.querySelector('.mmc-feedback-editor__error').hidden = true;
+        persistActiveDraft();
+      });
 
       editor.querySelector('form').addEventListener('submit', function (event) {
         event.preventDefault();
@@ -319,14 +397,19 @@
         }
         var xPercent = Math.max(0, Math.min(100, activeEditor.anchorX / pageWidth() * 100));
         if (activeEditor.commentId) {
+          clearDraft(pageId, activeEditor.commentId);
           updateComment(pageId, activeEditor.commentId, { text: text, xPercent: xPercent, y: activeEditor.anchorY });
         } else {
+          clearDraft(pageId);
           createComment(pageId, { text: text, xPercent: xPercent, y: activeEditor.anchorY });
         }
         closeEditor();
       });
 
-      editor.querySelector('.mmc-feedback-editor__cancel').addEventListener('click', closeEditor);
+      editor.querySelector('.mmc-feedback-editor__cancel').addEventListener('click', function () {
+        clearDraft(pageId, activeEditor.commentId || undefined);
+        closeEditor();
+      });
       var deleteButton = editor.querySelector('.mmc-feedback-editor__delete');
       if (deleteButton) {
         var deleteArmed = false;
@@ -342,6 +425,7 @@
             return;
           }
           if (deleteResetTimer) window.clearTimeout(deleteResetTimer);
+          clearDraft(pageId, existing.id);
           deleteComment(pageId, existing.id);
           closeEditor();
         });
@@ -410,6 +494,18 @@
     renderMarkers();
     renderDrawer();
 
+    var restoredDraft = getDraft(pageId);
+    if (restoredDraft) {
+      var restoredComment = restoredDraft.commentId ? getComments(pageId).find(function (comment) {
+        return comment.id === restoredDraft.commentId;
+      }) : null;
+      if (restoredDraft.commentId && !restoredComment) {
+        clearDraft(pageId, restoredDraft.commentId);
+      } else {
+        openEditor(restoredComment, null, restoredDraft);
+      }
+    }
+
     var sessionKey = 'mmcFeedbackHintSeen:' + pageId;
     var hasSeenHint = false;
     try { hasSeenHint = window.sessionStorage.getItem(sessionKey) === 'true'; } catch (error) { hasSeenHint = false; }
@@ -449,7 +545,12 @@
     textarea.id = fieldLabel.getAttribute('for');
     textarea.rows = 3;
     textarea.required = true;
-    textarea.value = comment.text;
+    var restoredDraft = getDraft(pageId);
+    var matchingDraft = restoredDraft && restoredDraft.commentId === comment.id ? restoredDraft : null;
+    textarea.value = matchingDraft ? matchingDraft.text : comment.text;
+    var draftStatus = document.createElement('p');
+    draftStatus.className = 'hub-feedback-item__draft-status';
+    draftStatus.textContent = matchingDraft ? 'Recovered unsaved draft.' : 'Changes save automatically in this browser.';
     var actions = document.createElement('div');
     actions.className = 'hub-feedback-item__actions';
     var save = document.createElement('button');
@@ -458,14 +559,29 @@
     var cancel = button('Cancel');
     var remove = button('Delete', 'is-delete');
     actions.append(save, cancel, remove);
-    form.append(fieldLabel, textarea, actions);
+    form.append(fieldLabel, textarea, draftStatus, actions);
+
+    if (matchingDraft) {
+      display.hidden = true;
+      form.hidden = false;
+    }
 
     edit.addEventListener('click', function () {
       display.hidden = true;
       form.hidden = false;
       textarea.focus();
     });
+    textarea.addEventListener('input', function () {
+      saveDraft(pageId, {
+        commentId: comment.id,
+        text: textarea.value,
+        xPercent: comment.xPercent,
+        y: comment.y
+      });
+      draftStatus.textContent = 'Draft saved automatically in this browser.';
+    });
     cancel.addEventListener('click', function () {
+      clearDraft(pageId, comment.id);
       textarea.value = comment.text;
       form.hidden = true;
       display.hidden = false;
@@ -476,6 +592,7 @@
         textarea.focus();
         return;
       }
+      clearDraft(pageId, comment.id);
       updateComment(pageId, comment.id, { text: textarea.value });
     });
     var removeArmed = false;
@@ -491,6 +608,7 @@
         return;
       }
       if (removeResetTimer) window.clearTimeout(removeResetTimer);
+      clearDraft(pageId, comment.id);
       deleteComment(pageId, comment.id);
     });
 
@@ -522,7 +640,9 @@
 
   window.MMCFeedback = {
     storageKey: STORAGE_KEY,
+    draftStorageKey: DRAFT_STORAGE_KEY,
     getComments: getComments,
+    getDraft: getDraft,
     createComment: createComment,
     updateComment: updateComment,
     deleteComment: deleteComment

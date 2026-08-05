@@ -20,5 +20,6 @@ Future Codex-created webpage prototypes in this project must:
 14. Keep `prototype_comment_history` private and preserve its version-archive trigger whenever the feedback schema changes.
 15. Before and after every prototype deployment, compare a read-only snapshot of active comment IDs and text. A deployment is not complete if existing comments disappear or change without an explicit reviewer action.
 16. Back up or export the Supabase database before any feedback-schema migration. Never commit comment exports to this public repository.
+17. Display comment numbers as a consecutive `1` through `N` index of active comments within each individual `data-feedback-page`. Reindex after a removal, and never use the visible number as a durable database identifier.
 
 The `docs/` tree is canonical. Do not keep duplicate prototype HTML or shared assets elsewhere in the repository where copies could drift.

@@ -155,7 +155,14 @@
         return comment && typeof comment.id === 'string' && typeof comment.text === 'string';
       })
       .slice()
-      .sort(function (a, b) { return a.number - b.number; });
+      .sort(function (a, b) { return a.number - b.number; })
+      .map(function (comment, index) {
+        var activeComment = Object.assign({}, comment);
+        // The visible number identifies this comment within the page's current
+        // active list. Stored sequence numbers remain untouched for retention.
+        activeComment.number = index + 1;
+        return activeComment;
+      });
   }
 
   function getLocalComments(pageId) {

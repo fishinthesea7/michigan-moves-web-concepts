@@ -82,6 +82,7 @@ Each hosted prototype includes a lightweight annotation layer for review:
 - Saved comments are loaded from one shared database, so a comment created or edited on one device appears on another device after refresh, refocus, or the short background refresh interval.
 - Publishing or redesigning the static hub and prototype pages does not replace the shared database, so saved comments remain attached to their stable page identifiers.
 - Removing a shared comment through the interface is a recoverable soft deletion. Prior versions are archived privately before every edit or removal.
+- Visible comment numbers are scoped to one concept and always reflect that concept's current active list. If an earlier comment is removed, the remaining comments are immediately relabeled `1` through `N`; other concepts have independent numbering.
 
 `docs/assets/feedback.js` owns the shared data model and behavior. Each prototype supplies a stable `data-feedback-page` identifier on `<body>`, and the matching hub disclosure uses the same identifier. Shared connection values live in `docs/assets/feedback-config.js`, and the database definition and row-level policies live in `supabase/feedback-schema.sql`.
 
@@ -92,6 +93,7 @@ There are no email notifications, identity prompts, owner tokens, or user accoun
 ### Comment-retention rules
 
 - Never rename an existing `data-feedback-page` value; it is the durable relationship between a page and its comments.
+- Treat visible comment numbers as page-local labels, not permanent record identifiers. Code and integrations must use the immutable comment UUID and stable `data-feedback-page` value instead.
 - Ordinary HTML, CSS, JavaScript, and GitHub Pages deployments must not run database deletion or replacement operations.
 - Never truncate or drop `prototype_comments`, `prototype_comment_counters`, or `prototype_comment_history` during a prototype update.
 - Before deploying, record the current active comment IDs and text through the read-only public endpoint. After deployment, confirm the same records remain unless a reviewer intentionally changed them during the deployment window.

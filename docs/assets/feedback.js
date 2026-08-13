@@ -868,6 +868,22 @@
       renderMarkers();
       renderDrawer();
     });
+    if ('ResizeObserver' in window) {
+      var flowResizeFrame = 0;
+      var flowResizeObserver = new ResizeObserver(function () {
+        if (flowResizeFrame) window.cancelAnimationFrame(flowResizeFrame);
+        flowResizeFrame = window.requestAnimationFrame(function () {
+          flowResizeFrame = 0;
+          renderMarkers();
+        });
+      });
+      Array.prototype.forEach.call(document.body.children, function (child) {
+        if (child === layer || child === drawer) return;
+        var position = window.getComputedStyle(child).position;
+        if (position === 'fixed' || position === 'absolute') return;
+        flowResizeObserver.observe(child);
+      });
+    }
     window.addEventListener('resize', renderMarkers);
     window.addEventListener('load', renderMarkers);
     renderMarkers();

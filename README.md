@@ -4,9 +4,9 @@ This repository contains a single, no-build GitHub Pages hub for sharing Michiga
 
 The hub groups completed variations for two pages:
 
-- Get Involved — Variation A (comparison-first)
+- Get Involved — Variation A (final comparison-first direction)
 - Get Involved — Variation B (guided-choice)
-- Coalition Directory — Variation A (map-first cards)
+- Coalition Directory — Variation A (final search-first cards direction)
 - Coalition Directory — Variation B (directory-first alphabetical rows)
 
 Every hosted page includes a review notice, a link back to the hub, and `noindex, nofollow` metadata. These measures discourage indexing; they do **not** make GitHub Pages private.
@@ -30,7 +30,10 @@ docs/
 │   ├── shared.js
 │   ├── get-involved.js
 │   ├── directory.js
-│   └── directory-data.js
+│   ├── directory-data.js
+│   └── images/
+│       ├── get-involved-hero.jpg
+│       └── directory-hero.jpeg
 ├── get-involved/
 │   ├── variation-a/index.html
 │   └── variation-b/index.html
@@ -67,6 +70,8 @@ The repository is `fishinthesea7/michigan-moves-web-concepts`, and GitHub Pages 
 - `https://fishinthesea7.github.io/michigan-moves-web-concepts/directory/variation-b/`
 
 The hub URL is the normal link to share for review. Direct links are stable bookmarks for individual concepts.
+
+The final-page decisions used for Variation A are recorded in [`FINAL-DESIGN-INSTRUCTIONS.md`](FINAL-DESIGN-INSTRUCTIONS.md). That file translates the pinned reviewer comments and the full supplied website-design document into concrete content, hierarchy, interaction, accessibility, photography, and WordPress handoff rules.
 
 ## Prototype feedback
 
@@ -181,14 +186,14 @@ Edit the existing `index.html` and shared assets in place. Do not rename its pag
 
 ### Get Involved
 
-- **Variation A — comparison-first:** Equal-weight Ambassador and Coalition Member cards, a complete responsive comparison matrix, separate Partner callout, three-step timeline, live-form fallback panel, and static onboarding cards.
+- **Variation A — final comparison-first direction:** A split-image hero, the low-lift commitment stated immediately, equal-weight Ambassador and Coalition Member cards that contain the complete comparison, a restrained Partner pathway, three-step timeline, registration-form fallback panel, and role-specific onboarding. The former duplicate comparison matrix was removed in response to review feedback.
 - **Variation B — guided-choice:** Accessible role tabs and a live detail panel, expandable full comparison, selected-role context in a vertical process, live-form fallback panel, and expandable onboarding sections.
 
-Both versions use the same approved role content. Selecting either standard pathway preserves the selection on the page, moves focus to the join section, and clearly states that the external form is not prefilled. The Partner route continues to use `https://mimoves.org/contact-us/`; the live join form continues to use `https://wkf.ms/4gKvw3b`.
+Both versions use the same approved role content. Selecting either standard pathway preserves the selection on the page, moves focus to the registration section, and clearly states that the external form is not prefilled. The Partner route continues to use `https://mimoves.org/contact-us/`; the live registration form continues to use `https://wkf.ms/4gKvw3b`.
 
 ### Coalition Directory
 
-- **Variation A — map-first cards:** A prominent prototype coverage component, integrated filter panel, responsive cards, and inline profile expansions.
+- **Variation A — final search-first cards direction:** A split-image hero, concise role key, immediate search/filter panel, prominent A–Z navigation, responsive cards, and inline profile expansions. The map was removed in response to review feedback because Michigan Moves is not introducing it yet.
 - **Variation B — alphabetical rows:** Persistent desktop filters, a collapsed mobile filter disclosure, prominent A–Z navigation, compact inline-expandable rows, and a secondary prototype map disclosure.
 
 Both versions use `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, map calculations, A–Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
@@ -208,6 +213,8 @@ Each prototype HTML file marks the transferable block:
 Transfer only the `<main class="mmc-page ...">` block. Do not transfer the review notice, standalone preview header, or standalone footer.
 
 Enqueue `docs/assets/prototype.css` plus the applicable page script. Directory pages also require `directory-data.js` before `directory.js`. `shared.js` builds only the hosted standalone header and footer. The review-only `feedback.css` and `feedback.js` files stay outside the WordPress handoff unless a separate production feedback system is explicitly approved.
+
+Variation A hero photography lives in `docs/assets/images/`. Mason supplied the licensed Adobe Stock originals; the optimized web copies use `AdobeStock_1372081553.jpeg` for Get Involved and `AdobeStock_840964123.jpeg` for the Directory. In WordPress, upload the approved originals or optimized copies to the Media Library, replace the relative image URLs in the transferable blocks, retain the supplied alt text, and use the displayed crops as the implementation reference.
 
 ## Public-access warning and safety
 

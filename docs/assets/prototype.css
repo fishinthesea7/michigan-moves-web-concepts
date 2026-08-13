@@ -2,6 +2,7 @@
 body.mmc-standalone {
   margin: 0;
   min-width: 320px;
+  overflow-x: hidden;
   background: #fff;
   color: #1a2b2e;
   font-family: Inter, Arial, sans-serif;
@@ -262,6 +263,23 @@ body.mmc-standalone {
 .mmc-hero__panel ul { margin: 0; padding-left: 20px; }
 .mmc-hero__panel li + li { margin-top: 8px; }
 
+/* Final Variation A heroes: aligned to the current MPAP split-image treatment. */
+.mmc-final-hero .mmc-hero__inner { padding-block: 72px 54px; }
+.mmc-final-hero__grid { display: grid; grid-template-columns: minmax(0,1.18fr) minmax(340px,.82fr); gap: 58px; align-items: center; }
+.mmc-final-hero .mmc-hero__content { max-width: 660px; }
+.mmc-final-hero h1 { max-width: 700px; font-size: clamp(2.9rem,5.6vw,4.7rem); }
+.mmc-directory--a.mmc-final-a .mmc-final-hero h1 { font-size: clamp(2.75rem,5vw,4.25rem); }
+.mmc-final-hero__commitment { max-width: 650px; margin: -6px 0 26px; padding: 14px 17px; border-left: 3px solid var(--mmc-gold); background: rgba(255,255,255,.08); color: rgba(255,255,255,.85); font-size: 14px; line-height: 1.55; }
+.mmc-final-hero__commitment strong { color: var(--mmc-gold); }
+.mmc-final-hero__media { position: relative; z-index: 1; min-height: 420px; margin: 0; padding: 10px; border-radius: 14px; background: linear-gradient(145deg,var(--mmc-gold),var(--mmc-gold-strong)); box-shadow: 0 24px 58px rgba(0,0,0,.22); }
+.mmc-final-hero__media img { width: 100%; height: 100%; min-height: 400px; display: block; border-radius: 8px; object-fit: cover; }
+.mmc-involved--a .mmc-final-hero__media img { object-position: 50% center; }
+.mmc-directory--a .mmc-final-hero__media img { object-position: 50% center; }
+.mmc-final-hero__facts { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 28px; margin-top: 44px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.2); }
+.mmc-final-hero__facts > div { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 12px; align-items: center; }
+.mmc-final-hero__facts strong { color: var(--mmc-gold); font-size: 30px; line-height: 1; }
+.mmc-final-hero__facts span { max-width: 220px; color: rgba(255,255,255,.78); font-size: 12px; line-height: 1.45; }
+
 /* Get Involved */
 .mmc-role-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 38px 0 0; padding: 8px; border-radius: 9px; background: rgba(255,255,255,.11); }
 .mmc-role-switch button { min-height: 50px; padding: 11px 16px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: rgba(255,255,255,.85); font-size: 14px; font-weight: 750; }
@@ -288,6 +306,18 @@ body.mmc-standalone {
 .mmc-page [data-select-role][aria-pressed="true"] { background: var(--mmc-gold); color: var(--mmc-deep); }
 .mmc-consent-note { margin-top: 24px; padding: 17px 20px; border: 1px solid #dce5e4; border-radius: 7px; background: #fff; color: var(--mmc-muted); font-size: 14px; }
 .mmc-consent-note strong { color: var(--mmc-primary); }
+.mmc-pathway-signal { margin: 0 0 28px; padding: 16px 18px; border-radius: 7px; background: var(--mmc-primary); color: #fff; }
+.mmc-role-card--member .mmc-pathway-signal { background: var(--mmc-deep); }
+.mmc-pathway-signal strong, .mmc-pathway-signal span { display: block; }
+.mmc-pathway-signal strong { color: var(--mmc-gold); font-size: 15px; line-height: 1.4; }
+.mmc-pathway-signal span { margin-top: 3px; color: rgba(255,255,255,.78); font-size: 12px; }
+.mmc-involved--a.mmc-final-a .mmc-role-card__best { min-height: 136px; }
+
+.mmc-partner-strip { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 36px; align-items: center; margin-top: 30px; padding: 28px 30px; border: 1px solid var(--mmc-border); border-top: 4px solid var(--mmc-gold-strong); border-radius: 9px; background: #fff; }
+.mmc-partner-strip .mmc-eyebrow { margin-bottom: 9px; }
+.mmc-partner-strip h2 { margin-bottom: 8px; font-size: clamp(1.45rem,2.8vw,2rem); }
+.mmc-partner-strip p:last-child { max-width: 790px; margin-bottom: 0; color: var(--mmc-muted); font-size: 14px; }
+.mmc-partner-strip .mmc-btn { white-space: nowrap; }
 
 .mmc-comparison-matrix { overflow: hidden; border: 1px solid var(--mmc-border); border-radius: 10px; background: #fff; box-shadow: 0 10px 30px rgba(15,56,64,.055); }
 .mmc-comparison-matrix__row { display: grid; grid-template-columns: minmax(155px,.58fr) minmax(0,1fr) minmax(0,1fr); }
@@ -392,6 +422,10 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-onboarding-card--member { border-top-color: var(--mmc-deep); }
 .mmc-onboarding-card__path { display: block; margin-bottom: 12px; color: var(--mmc-primary); font-size: 11px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
 .mmc-onboarding-card h3 { margin-bottom: 22px; font-size: 25px; }
+.mmc-closing-link-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 30px; align-items: center; margin-top: 28px; padding: 24px 26px; border-top: 1px solid var(--mmc-border); background: rgba(255,255,255,.58); }
+.mmc-closing-link-row p { max-width: 780px; margin: 0; color: var(--mmc-muted); font-size: 14px; }
+.mmc-closing-link-row strong { color: var(--mmc-deep); }
+.mmc-closing-link-row .mmc-text-link { white-space: nowrap; }
 .mmc-onboarding-accordion { max-width: 900px; margin-inline: auto; display: grid; gap: 14px; }
 .mmc-onboarding-details { overflow: hidden; border: 1px solid var(--mmc-border); border-radius: 9px; background: #fff; }
 .mmc-onboarding-details > summary { min-height: 78px; padding: 17px 22px; display: flex; align-items: center; justify-content: space-between; gap: 22px; list-style: none; color: var(--mmc-deep); font-size: 18px; font-weight: 800; }
@@ -436,6 +470,10 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-map-controls button:hover, .mmc-map-controls button.is-active { border-color: var(--mmc-gold); background: var(--mmc-gold); color: var(--mmc-deep); }
 
 .mmc-filter-shell { margin-top: -44px; position: relative; z-index: 2; padding: 28px; border: 1px solid var(--mmc-border); border-radius: 10px; background: #fff; box-shadow: 0 16px 38px rgba(15,56,64,.1); }
+.mmc-directory--a.mmc-final-a .mmc-directory-search-heading { margin-bottom: 34px; }
+.mmc-directory--a.mmc-final-a .mmc-filter-shell { margin-top: 0; }
+.mmc-filter-consent-note { margin: 22px 0 0; padding: 13px 15px; border-left: 3px solid var(--mmc-gold-strong); background: var(--mmc-cream); color: var(--mmc-muted); font-size: 12px; line-height: 1.55; }
+.mmc-filter-consent-note strong { color: var(--mmc-deep); }
 .mmc-filter-grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 15px; align-items: end; }
 .mmc-field { display: grid; gap: 7px; }
 .mmc-field label, .mmc-field__label { color: var(--mmc-deep); font-size: 12px; font-weight: 800; letter-spacing: .055em; text-transform: uppercase; }
@@ -559,6 +597,10 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-preview-footer__inner { grid-template-columns: 1.2fr 1fr 1fr; }
   .mmc-preview-footer__inner > :last-child { grid-column: 2 / 4; }
   .mmc-hero--split .mmc-hero__inner { grid-template-columns: 1fr; gap: 38px; }
+  .mmc-final-hero__grid { grid-template-columns: minmax(0,1.08fr) minmax(300px,.72fr); gap: 34px; }
+  .mmc-final-hero__media { min-height: 360px; }
+  .mmc-final-hero__media img { min-height: 340px; }
+  .mmc-final-hero h1 { font-size: clamp(2.8rem,6.6vw,4.15rem); }
   .mmc-hero__panel { max-width: 650px; }
   .mmc-role-card__body, .mmc-role-card__header { padding-inline: 28px; }
   .mmc-partner-callout { padding: 42px; }
@@ -596,6 +638,13 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-section-heading h2 { font-size: 2.05rem; }
   .mmc-hero__inner { padding: 70px 0 64px; }
   .mmc-hero h1 { font-size: clamp(2.55rem, 13vw, 4rem); }
+  .mmc-final-hero .mmc-hero__inner { padding-block: 62px 44px; }
+  .mmc-final-hero__grid { grid-template-columns: 1fr; gap: 34px; }
+  .mmc-final-hero__media { min-height: 320px; padding: 8px; }
+  .mmc-final-hero__media img { min-height: 304px; }
+  .mmc-final-hero__facts { grid-template-columns: 1fr; gap: 16px; margin-top: 34px; }
+  .mmc-final-hero__facts > div { grid-template-columns: 74px minmax(0,1fr); }
+  .mmc-final-hero__facts span { max-width: none; }
   .mmc-hero__stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
   .mmc-hero__panel { padding: 26px; }
   .mmc-role-switch { grid-template-columns: 1fr; }
@@ -612,6 +661,8 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-comparison-matrix__actions [role="cell"] { display: block; }
   .mmc-compare-details__body { padding: 14px; }
   .mmc-partner-callout { grid-template-columns: 1fr; gap: 28px; padding: 34px 28px; }
+  .mmc-partner-strip { grid-template-columns: 1fr; gap: 22px; padding: 26px 24px; }
+  .mmc-partner-strip .mmc-btn { width: 100%; white-space: normal; }
   .mmc-process-grid { grid-template-columns: 1fr; gap: 34px; }
   .mmc-process-grid::before { top: 20px; bottom: 20px; left: 27px; right: auto; width: 2px; height: auto; }
   .mmc-process-step { padding-left: 80px; }
@@ -635,12 +686,15 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-step-accordion__panel { padding: 0 24px 24px; }
   .mmc-onboarding-grid { grid-template-columns: 1fr; }
   .mmc-onboarding-card { padding: 28px; }
+  .mmc-closing-link-row { grid-template-columns: 1fr; gap: 14px; padding: 22px; }
+  .mmc-closing-link-row .mmc-text-link { white-space: normal; }
   .mmc-directory-intro { grid-template-columns: 1fr; gap: 32px; }
   .mmc-role-key { grid-template-columns: 1fr; }
   .mmc-map-panel { grid-template-columns: 1fr; }
   .mmc-map-visual { min-height: 330px; padding: 28px; }
   .mmc-map-copy { padding: 34px 28px; }
   .mmc-filter-shell { margin-top: -30px; padding: 22px; }
+  .mmc-directory--a.mmc-final-a .mmc-filter-shell { margin-top: 0; }
   .mmc-filter-grid { grid-template-columns: 1fr; }
   .mmc-result-bar { align-items: flex-start; flex-direction: column; }
   .mmc-directory-results--cards { grid-template-columns: 1fr; }
@@ -667,6 +721,8 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-preview-brand { flex-basis: 184px; }
   .mmc-preview-brand img { width: 184px; }
   .mmc-hero__stat-row { grid-template-columns: 1fr; }
+  .mmc-final-hero__media { min-height: 270px; }
+  .mmc-final-hero__media img { min-height: 254px; }
   .mmc-role-card__body, .mmc-role-card__header { padding-inline: 22px; }
   .mmc-process-step { padding-left: 70px; }
   .mmc-btn-row { display: grid; }

@@ -214,7 +214,7 @@
 @media (max-width: 899px) {
   .hub-concept { min-height: 220px; }
   .hub-feedback__panel { max-height: 190px; }
-  .mmc-feedback-drawer { top: 88px; max-height: calc(100vh - 108px); }
+  .mmc-feedback-drawer { top: 154px; max-height: calc(100vh - 174px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -56,7 +56,7 @@
           '<div>' +
             '<h2>Join Michigan Moves</h2>' +
             '<p>Choose the involvement level that fits how you want to contribute.</p>' +
-            '<p><a href="https://wkf.ms/4gKvw3b" target="_blank" rel="noopener">Open the join form <span aria-hidden="true">↗</span></a></p>' +
+            '<p><a href="https://wkf.ms/4gKvw3b" target="_blank" rel="noopener">Open the registration form <span aria-hidden="true">↗</span></a></p>' +
           '</div>' +
           '<div>' +
             '<h2>Connect</h2>' +

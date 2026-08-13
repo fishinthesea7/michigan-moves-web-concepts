@@ -10,7 +10,7 @@
     },
     member: {
       name: 'Coalition Member',
-      description: 'Active participation through recurring virtual sector meetings.'
+      description: 'Active participation through four virtual sector meetings per year, plus occasional between-meeting contribution.'
     }
   };
 

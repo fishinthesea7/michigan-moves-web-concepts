@@ -79,12 +79,22 @@
 
   document.querySelectorAll('.mmc-menu-toggle').forEach(function (button) {
     var nav = document.getElementById(button.getAttribute('aria-controls'));
+    function closeMenu() {
+      button.setAttribute('aria-expanded', 'false');
+      button.querySelector('.mmc-visually-hidden').textContent = 'Open menu';
+      nav.hidden = true;
+      document.documentElement.classList.remove('mmc-menu-open');
+      button.focus();
+    }
     button.addEventListener('click', function () {
       var open = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', String(!open));
       button.querySelector('.mmc-visually-hidden').textContent = open ? 'Open menu' : 'Close menu';
       nav.hidden = open;
       document.documentElement.classList.toggle('mmc-menu-open', !open);
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') closeMenu();
     });
   });
 

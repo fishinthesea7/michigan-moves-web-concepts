@@ -23,20 +23,36 @@ This document converts Mason’s pinned prototype comments, the complete `Websit
 - Use meaningful photography as a human entry point, not decoration. Each final hero gets one licensed, wide landscape image selected from Mason’s supplied Adobe Stock set. Keep the original source filenames documented, preserve informative alt text, and treat the displayed crop as the WordPress implementation reference.
 - Do not imply that prototype content, profiles, regions, or statistics are real when they are not.
 
+## Tubik education translated into Michigan Moves decisions
+
+The source articles are not being treated as a list of generic best practices. Each principle maps to a visible interface decision:
+
+1. **Page anatomy is a movement system.** Each page is organized around a deliberate eye path, scroll path, and decision zone. The hero orients; the next section lets the user act; later sections answer progressively narrower questions. No section exists only to decorate the scroll.
+2. **Design for scanners.** Headlines state the question a visitor is trying to answer. Numerals become anchors: `0` required meetings, `4` virtual meetings per year, `3` registration steps, `100+` allies, `60+` organizations, and `10` sectors. Paragraphs hold one idea, and discrete information uses lists.
+3. **One dominant CTA per decision zone.** A filled button identifies the next action; related but secondary paths use quieter text links. Partner never competes visually with Ambassador or Member registration. Directory filtering never competes with the search field.
+4. **Use progressive disclosure like onboarding.** Visitors see fit and commitment before longer activity and benefit lists. Native `details` elements keep all approved information available without presenting a wall of text. Selecting a pathway preserves context and opens its matching onboarding information.
+5. **Use dividers as punctuation, not decoration.** Major chapters use background shifts and macro spacing. Repeated items use aligned inset rules. The comparison uses one meaningful middle divider. Avoid card-inside-card layouts, stacked shadows, and borders around every paragraph.
+6. **Negative space defines relationships.** Macro space separates chapters; micro space supports readable line height, button padding, and clear list rhythm. Content width is constrained to roughly 60–80 characters where sustained reading occurs.
+7. **Search is the Directory’s intent shortcut.** The Directory places a large, labeled search field before explanatory content. Primary roles are immediate quick filters; sector, geography, and CEO Pledge controls sit in a secondary refinement disclosure. The live result count stays adjacent to the search decision zone.
+8. **Cards are reserved for scan language.** Organization profiles remain equal-sized cards because they are repeated, comparable records. The Get Involved page uses two comparison lanes rather than two large floating cards because those lanes are one decision, not a catalog.
+9. **Dark versus light follows reading needs.** Dark teal is reserved for emotional or decisive moments—the hero and registration runway. Text-heavy comparison, profile, and onboarding content uses light surfaces with stronger secondary-text contrast.
+10. **Directional cues save effort.** Downward arrows connect hero actions to the next chapter; the numbered registration rail shows position and completion logic; related-page links appear after meaning-rich content instead of being scattered indiscriminately.
+11. **The footer must provide closure.** The review overlay measures only in-flow document content and clamps old comment positions to that boundary. The page ends at the footer even after content or comments are removed.
+
 ## Final Get Involved page — Variation A
 
 ### Hero
 
 - Use a concise split hero: the decision message on the left and licensed community-activity photography on the right.
 - Lead with “Choose Your Level of Involvement” and the approved introduction.
-- State the low-lift idea early: Ambassadors have no meeting requirement; Members join four virtual sector meetings per year, plus occasional between-meeting contribution.
+- Make the low-lift difference the first comparison immediately after the hero: Ambassadors have `0` required meetings; Members join `4` virtual sector meetings per year, plus occasional between-meeting contribution.
 - Use “Coalition allies” as the umbrella label in the 100+ statistic, not “Coalition members.” Keep the approved 60+ organizations and 10 sectors context.
-- Include a primary “Compare the pathways” action and a visible secondary link to the Coalition Directory.
+- Include one primary “Compare the 2 pathways” action and a quieter text link to the Coalition Directory.
 
 ### Role comparison
 
-- Keep the two equal-weight Ambassador and Coalition Member cards as the complete comparison. Remove the later full comparison matrix because it repeats the same information.
-- Both cards must use the same information pattern: best fit, activities, commitment, benefits, digital badge, optional consent-based directory listing, and role-specific registration CTA.
+- Use two equal-weight lanes inside one comparison board. A single middle divider communicates one shared decision without creating a cage of cards.
+- Both lanes use the same information pattern: visible best fit and commitment, progressively disclosed activities and benefits, digital badge, optional consent-based directory listing, and a persistent role-specific registration CTA.
 - Ambassador definition: an organization or individual interested in the work with no Coalition responsibilities; stays informed, shares resources and opportunities, promotes physical activity locally, and connects others. No meetings are required.
 - Member definition: primarily an organization that joins a sector committee, shares expertise, identifies priorities, develops strategies, and helps implement the Michigan Physical Activity Plan. State the concrete commitment as four recurring virtual sector meetings per year plus occasional contribution between meetings.
 - Use approved benefits only. Mark the digital badges and onboarding toolkits as included role materials without promising anything beyond the supplied content.
@@ -51,7 +67,7 @@ This document converts Mason’s pinned prototype comments, the complete `Websit
 ### Joining process and registration
 
 - Use “registration form” or “register,” never “join form.”
-- Keep the three-step process: choose a level, complete the online registration form, receive role-specific onboarding.
+- Present the three-step process as one numbered registration runway: choose a level, complete the online registration form, receive role-specific onboarding.
 - Say the form **will ask** for organization name, sector(s), region or counties served, primary contact, organization website, and areas of interest.
 - Keep the live `https://wkf.ms/4gKvw3b` link on the page. The provider currently does not permit embedding, so use an honest in-page fallback panel rather than a fake form.
 - Use “Ambassadors receive” and “Members receive” in onboarding headings; do not use “may receive.”
@@ -63,13 +79,13 @@ This document converts Mason’s pinned prototype comments, the complete `Websit
 ### Hero and orientation
 
 - Use a concise split hero with licensed community-collaboration photography.
-- Lead with “Michigan Moves Coalition Directory,” a direct search action, and the restrained placeholder/permission notice.
+- Lead with “Michigan Moves Coalition Directory” and one direct search action. Place the restrained placeholder/permission notice in a separate, immediately following strip so it remains visible without crowding the hero.
 - Explain the three primary roles compactly: Ambassador, Coalition Member, and Partner. Keep CEO Pledge Signer clearly secondary.
 
 ### Directory experience
 
 - Remove the map and coverage section completely. No map is planned yet.
-- Make search and filtering the main interaction immediately after orientation.
+- Make search the first task immediately after orientation. Show primary-role quick filters next; disclose sector, geography, and CEO Pledge refinements as secondary controls.
 - Keep keyword search, primary role, the 10 approved sectors, placeholder geography, CEO Pledge filter, A–Z navigation, clear filters, and dynamic result count.
 - Keep a responsive card grid with expandable profile details. The cards should be compact enough to scan but still show role, sectors, geography, representative, and conditional CEO Pledge status.
 - Keep the useful empty-state reset and all combined-filter behavior.
@@ -105,4 +121,4 @@ The web copies are resized to approximately 2560 pixels wide and stored in `docs
 - Confirm there are no console errors, missing assets, broken relative paths, or horizontal overflow.
 - Confirm the live registration form and Contact links are correct.
 - Confirm the Directory uses only placeholder records, no consent-false record reaches any result or count, and CEO Pledge is never a primary role.
-- Read-only compare active Supabase comment IDs and text before and after deployment. Page revisions must not alter or delete feedback records.
+- Read-only compare active Supabase comments before and after deployment. Do not alter feedback unless Mason explicitly requests it; resolved comments explicitly cleared for this revision remain recoverable through private history.

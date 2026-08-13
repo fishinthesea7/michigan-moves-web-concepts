@@ -10,13 +10,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/prototype.css?v=20260813-final-a2">
-  <link rel="stylesheet" href="../../assets/feedback.css?v=20260813-mobile-menu">
-  <script src="../../assets/shared.js?v=20260813-registration-label" defer></script>
+  <link rel="stylesheet" href="../../assets/prototype.css?v=20260813-tubik-a1">
+  <link rel="stylesheet" href="../../assets/feedback.css?v=20260813-flow-height">
+  <script src="../../assets/shared.js?v=20260813-menu-escape" defer></script>
   <script src="../../assets/directory-data.js?v=20260813-final-a" defer></script>
-  <script src="../../assets/directory.js?v=20260813-final-a" defer></script>
+  <script src="../../assets/directory.js?v=20260813-tubik-a1" defer></script>
   <script src="../../assets/feedback-config.js?v=20260804-feedback-v8" defer></script>
-  <script src="../../assets/feedback.js?v=20260804-feedback-v8" defer></script>
+  <script src="../../assets/feedback.js?v=20260813-flow-height" defer></script>
 </head>
 <body class="mmc-standalone" data-site-root="../../" data-variation="a" data-feedback-page="directory-variation-a" data-feedback-title="Coalition Directory — Variation A">
   <aside class="mmc-review-bar" data-preview-only aria-label="Prototype review notice">
@@ -26,18 +26,15 @@
 
   <!-- BEGIN WORDPRESS / ELEMENTOR PAGE-BODY BLOCK -->
   <main id="main-content" class="mmc-page mmc-directory mmc-directory--a mmc-final-a" data-directory-mode="cards">
-    <section class="mmc-hero mmc-final-hero" aria-labelledby="directory-a-title">
+    <section class="mmc-hero mmc-final-hero mmc-directory-hero" aria-labelledby="directory-a-title">
       <div class="mmc-container mmc-hero__inner">
         <div class="mmc-final-hero__grid">
           <div class="mmc-hero__content">
             <p class="mmc-eyebrow">Connected across Michigan</p>
             <h1 id="directory-a-title">Michigan Moves Coalition Directory</h1>
-            <p class="mmc-hero__lead">Find the organizations and people helping advance a shared vision for physical activity across Michigan.</p>
-            <div class="mmc-btn-row">
-              <a class="mmc-btn" href="#directory-filters-a">Search the directory <span aria-hidden="true">↓</span></a>
-              <a class="mmc-btn mmc-btn--outline" href="../../get-involved/variation-a/">Explore ways to get involved <span aria-hidden="true">→</span></a>
-            </div>
-            <div class="mmc-demo-notice"><span aria-hidden="true">ⓘ</span><span><strong>Prototype demonstration data.</strong> Every profile, name, logo, region, and county below is a placeholder. Final public profiles will appear only with permission.</span></div>
+            <p class="mmc-hero__lead">Search the organizations and people helping advance a shared vision for physical activity across Michigan.</p>
+            <a class="mmc-btn" href="#directory-filters-a">Find a profile <span aria-hidden="true">↓</span></a>
+            <p class="mmc-hero__quiet-link"><a href="../../get-involved/variation-a/">Interested in joining? Compare the pathways <span aria-hidden="true">→</span></a></p>
           </div>
           <figure class="mmc-final-hero__media">
             <img src="../../assets/images/directory-hero.jpeg?v=20260813-licensed" alt="A diverse group collaborating over plans and documents." width="2560" height="1708">
@@ -46,45 +43,47 @@
       </div>
     </section>
 
-    <section class="mmc-section mmc-section--tight" aria-labelledby="role-key-a-heading">
-      <div class="mmc-container mmc-directory-intro">
-        <div class="mmc-section-heading">
-          <p class="mmc-eyebrow">One community, three primary roles</p>
-          <h2 id="role-key-a-heading">Know what each role means</h2>
-          <p>Every profile has one primary Coalition relationship. CEO Pledge Signer is a separate workplace commitment that can appear as an additional credential.</p>
-        </div>
-        <div class="mmc-role-key" aria-label="Primary role definitions">
-          <div class="mmc-role-key__item"><strong>Coalition Ambassador</strong><span>Stays informed, shares resources, and advocates locally with no required meetings.</span></div>
-          <div class="mmc-role-key__item"><strong>Coalition Member</strong><span>Participates in a sector committee and helps implement the Michigan Physical Activity Plan.</span></div>
-          <div class="mmc-role-key__item"><strong>Partner</strong><span>Has a formal organizational relationship established by mutual agreement.</span></div>
-        </div>
-      </div>
+    <section class="mmc-directory-notice" aria-label="Prototype directory notice">
+      <div class="mmc-container"><p><span aria-hidden="true">ⓘ</span><strong>Demonstration profiles only.</strong> Every name, logo, region, and county is a placeholder. Final public profiles appear only with permission.</p></div>
     </section>
 
-    <section class="mmc-section mmc-section--light" id="directory-filters-a" aria-labelledby="filters-a-heading">
+    <section class="mmc-section mmc-directory-command-section" id="directory-filters-a" aria-labelledby="filters-a-heading">
       <div class="mmc-container">
-        <div class="mmc-section-heading mmc-directory-search-heading">
-          <p class="mmc-eyebrow">Search the Coalition</p>
-          <h2 id="filters-a-heading">Find a profile</h2>
-          <p>Search by name, then narrow the demonstration profiles by relationship, sector, geography, or CEO Pledge status.</p>
+        <div class="mmc-directory-command">
+          <div class="mmc-directory-command__heading">
+            <div><p class="mmc-eyebrow">Search the Coalition</p><h2 id="filters-a-heading">Who are you looking for?</h2></div>
+            <p data-result-count aria-live="polite"></p>
+          </div>
+          <div class="mmc-directory-searchbox">
+            <label for="search-a">Search by organization or representative</label>
+            <span aria-hidden="true">⌕</span>
+            <input id="search-a" type="search" data-directory-search placeholder="Try “Organization Name 05” or “First Last”" autocomplete="off">
+          </div>
+          <fieldset class="mmc-role-quick-filter">
+            <legend>Primary role</legend>
+            <button type="button" data-directory-role-button="" aria-pressed="true">All</button>
+            <button type="button" data-directory-role-button="Coalition Ambassador" aria-pressed="false">Coalition Ambassador</button>
+            <button type="button" data-directory-role-button="Coalition Member" aria-pressed="false">Coalition Member</button>
+            <button type="button" data-directory-role-button="Partner" aria-pressed="false">Partner</button>
+          </fieldset>
+          <details class="mmc-refine-filters" open>
+            <summary>Refine by sector, geography, or credential <span data-active-filter-count>0 active</span></summary>
+            <div class="mmc-refine-filters__body">
+              <div class="mmc-field"><label for="sector-a">Sector</label><select id="sector-a" data-directory-sector></select></div>
+              <div class="mmc-field"><label for="geography-a">Geography</label><select id="geography-a" data-directory-geography></select></div>
+              <label class="mmc-checkbox"><input type="checkbox" data-directory-ceo> CEO Pledge Signer only</label>
+              <button class="mmc-clear-button" type="button" data-clear-filters>Clear all filters</button>
+            </div>
+          </details>
         </div>
-        <div class="mmc-filter-shell">
-          <div class="mmc-filter-grid">
-            <div class="mmc-field"><label for="search-a">Search organization or representative</label><input id="search-a" type="search" data-directory-search placeholder="Organization Name or First Last…" autocomplete="off"></div>
-            <div class="mmc-field"><label for="role-a">Primary role</label><select id="role-a" data-directory-role><option value="">All primary roles</option><option value="Coalition Ambassador">Coalition Ambassador</option><option value="Coalition Member">Coalition Member</option><option value="Partner">Partner</option></select></div>
-            <div class="mmc-field"><label for="sector-a">Sector</label><select id="sector-a" data-directory-sector></select></div>
-            <div class="mmc-field"><label for="geography-a">Geography</label><select id="geography-a" data-directory-geography></select></div>
-          </div>
-          <div class="mmc-filter-actions">
-            <label class="mmc-checkbox"><input type="checkbox" data-directory-ceo> CEO Pledge Signer only</label>
-            <button class="mmc-clear-button" type="button" data-clear-filters>Clear all filters</button>
-          </div>
-          <p class="mmc-filter-consent-note"><strong>Permission comes first.</strong> The production directory will show only profiles that explicitly consent to public listing. These demonstration records are placeholders.</p>
+
+        <div class="mmc-role-legend" aria-labelledby="role-key-a-heading">
+          <div class="mmc-role-legend__intro"><p class="mmc-eyebrow">How profiles are labeled</p><h2 id="role-key-a-heading">3 primary roles</h2><p>CEO Pledge Signer is a separate workplace credential, never a fourth role.</p></div>
+          <dl><div><dt>Coalition Ambassador</dt><dd>Stays informed, shares resources, and advocates locally with no required meetings.</dd></div><div><dt>Coalition Member</dt><dd>Participates in a sector committee and helps implement the Michigan Physical Activity Plan.</dd></div><div><dt>Partner</dt><dd>Has a formal organizational relationship established by mutual agreement.</dd></div></dl>
         </div>
 
         <div class="mmc-directory-tools">
-          <div class="mmc-result-bar"><p data-result-count aria-live="polite"></p><a class="mmc-text-link" href="../../get-involved/variation-a/">Learn how to get involved <span aria-hidden="true">→</span></a></div>
-          <div class="mmc-alphabet-wrap"><span>Browse by organization name</span><nav class="mmc-alphabet" data-alphabet aria-label="Filter by first letter"></nav></div>
+          <div class="mmc-alphabet-wrap mmc-alphabet-wrap--prominent"><span>Jump to an organization name</span><nav class="mmc-alphabet" data-alphabet aria-label="Filter by first letter"></nav></div>
           <div class="mmc-directory-results--cards" data-directory-results></div>
         </div>
       </div>
@@ -92,9 +91,9 @@
 
     <section class="mmc-section mmc-section--cream mmc-section--tight" aria-labelledby="directory-join-a-heading">
       <div class="mmc-container">
-        <div class="mmc-directory-join-callout">
-          <div><p class="mmc-eyebrow">Join the Coalition</p><h2 id="directory-join-a-heading">Interested in being part of Michigan Moves?</h2><p>Compare the Ambassador and Coalition Member pathways, then use the official registration form on the Get Involved page.</p></div>
-          <a class="mmc-btn mmc-btn--teal" href="../../get-involved/variation-a/">Explore ways to get involved <span aria-hidden="true">→</span></a>
+        <div class="mmc-directory-join-callout mmc-directory-join-callout--final">
+          <div><p class="mmc-eyebrow">Your next step</p><h2 id="directory-join-a-heading">Want to appear here in the future?</h2><p>Compare the Ambassador and Coalition Member pathways, then use the official registration form on the Get Involved page.</p></div>
+          <a class="mmc-btn" href="../../get-involved/variation-a/">Compare the pathways <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>

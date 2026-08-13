@@ -60,6 +60,7 @@
           '<div class="mmc-logo-placeholder" aria-label="Organization logo placeholder">' + escapeHtml(record.organizationLogo) + '</div>' +
           '<div class="mmc-directory-card__heading"><div class="mmc-badge-row">' + badgeMarkup(record) + '</div><h3>' + escapeHtml(record.organizationName) + '</h3><p>' + escapeHtml(record.region) + ' · ' + escapeHtml(record.countiesServed.join(', ')) + '</p></div>' +
         '</div>' +
+        '<p class="mmc-directory-card__representative"><span>' + escapeHtml(config.representativeLabel) + '</span>' + escapeHtml(record.representativeName) + ' · ' + escapeHtml(record.representativeTitle) + '</p>' +
         sectorTagMarkup(record) +
         '<button class="mmc-profile-toggle" type="button" data-profile-toggle aria-expanded="false" aria-controls="' + id + '"><span data-toggle-label>View profile</span><span data-toggle-icon aria-hidden="true">+</span></button>' +
         '<div class="mmc-profile-expansion" id="' + id + '" hidden>' + detailMarkup(record) + '</div>' +
@@ -128,6 +129,11 @@
         if (input.value !== state.query) input.value = state.query;
       });
       root.querySelectorAll('[data-directory-role]').forEach(function (select) { select.value = state.role; });
+      root.querySelectorAll('[data-directory-role-button]').forEach(function (button) {
+        var active = button.getAttribute('data-directory-role-button') === state.role;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
       root.querySelectorAll('[data-directory-sector]').forEach(function (select) { select.value = state.sector; });
       root.querySelectorAll('[data-directory-geography]').forEach(function (select) { select.value = state.geography; });
       root.querySelectorAll('[data-directory-ceo]').forEach(function (input) { input.checked = state.ceo; });
@@ -198,6 +204,12 @@
     });
     root.querySelectorAll('[data-directory-role]').forEach(function (select) {
       select.addEventListener('change', function () { state.role = select.value; render(); });
+    });
+    root.querySelectorAll('[data-directory-role-button]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        state.role = button.getAttribute('data-directory-role-button');
+        render();
+      });
     });
     root.querySelectorAll('[data-directory-sector]').forEach(function (select) {
       select.addEventListener('change', function () { state.sector = select.value; render(); });

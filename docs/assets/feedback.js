@@ -567,8 +567,22 @@
       setDrawer(!drawer.classList.contains('is-open'));
     });
 
+    function contentHeight() {
+      var flowBottom = window.innerHeight;
+      Array.prototype.forEach.call(document.body.children, function (child) {
+        if (child === layer || child === drawer) return;
+        var position = window.getComputedStyle(child).position;
+        if (position === 'fixed' || position === 'absolute') return;
+        var rect = child.getBoundingClientRect();
+        flowBottom = Math.max(flowBottom, rect.bottom + window.scrollY);
+      });
+      return Math.ceil(flowBottom);
+    }
+
     function layerSize() {
-      layer.style.height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + 'px';
+      var height = contentHeight();
+      layer.style.height = height + 'px';
+      return height;
     }
 
     function pageWidth() {
@@ -576,9 +590,10 @@
     }
 
     function markerPosition(comment) {
+      var maximumY = Math.max(18, contentHeight() - 18);
       return {
         x: Math.max(18, Math.min(pageWidth() - 18, pageWidth() * (Number(comment.xPercent) || 0) / 100)),
-        y: Math.max(18, Number(comment.y) || 18)
+        y: Math.max(18, Math.min(maximumY, Number(comment.y) || 18))
       };
     }
 

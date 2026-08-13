@@ -186,14 +186,14 @@ Edit the existing `index.html` and shared assets in place. Do not rename its pag
 
 ### Get Involved
 
-- **Variation A — final comparison-first direction:** A split-image hero, the low-lift commitment stated immediately, equal-weight Ambassador and Coalition Member cards that contain the complete comparison, a restrained Partner pathway, three-step timeline, registration-form fallback panel, and role-specific onboarding. The former duplicate comparison matrix was removed in response to review feedback.
+- **Variation A — final comparison-first direction:** A lean split-image hero leads to a proof strip and two plain-language comparison lanes. Commitment is reduced to the decisive numbers—zero required meetings for Ambassadors and four virtual meetings per year for Members—while activities and benefits remain available through progressive disclosure. A restrained Partner rail, dark three-step registration runway, honest form fallback, and role-specific onboarding complete one continuous decision path.
 - **Variation B — guided-choice:** Accessible role tabs and a live detail panel, expandable full comparison, selected-role context in a vertical process, live-form fallback panel, and expandable onboarding sections.
 
 Both versions use the same approved role content. Selecting either standard pathway preserves the selection on the page, moves focus to the registration section, and clearly states that the external form is not prefilled. The Partner route continues to use `https://mimoves.org/contact-us/`; the live registration form continues to use `https://wkf.ms/4gKvw3b`.
 
 ### Coalition Directory
 
-- **Variation A — final search-first cards direction:** A split-image hero, concise role key, immediate search/filter panel, prominent A–Z navigation, responsive cards, and inline profile expansions. The map was removed in response to review feedback because Michigan Moves is not introducing it yet.
+- **Variation A — final search-first cards direction:** A lean split-image hero moves directly into a large labeled search field and live result count. Primary roles are immediate quick filters; sector, geography, and CEO Pledge status are secondary refinements. A compact role legend, prominent A–Z navigation, equal-sized scan-friendly cards, and inline profile expansions keep organization-finding—not interface explanation—as the page’s main task. The map remains removed because Michigan Moves is not introducing it yet.
 - **Variation B — alphabetical rows:** Persistent desktop filters, a collapsed mobile filter disclosure, prominent A–Z navigation, compact inline-expandable rows, and a secondary prototype map disclosure.
 
 Both versions use `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, map calculations, A–Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
@@ -246,4 +246,4 @@ GitHub Pages is publicly accessible to anyone with the URL. `robots.txt` and pag
 
 ## Verification expectations
 
-Before publishing an update, capture a read-only feedback snapshot, serve `docs/` locally, and verify the hub, four direct pages, review links, feedback pins and synchronized hub editing, recoverable removal, mobile menu, role controls, accordions, form fallbacks, directory filters, A–Z navigation, map controls, consent gate, responsive layouts, relative assets, and browser console. After publishing, confirm the comment snapshot is intact and repeat the basic link, asset, mobile, and console checks against the deployed URLs.
+Before publishing an update, capture a read-only feedback snapshot, serve `docs/` locally, and verify the hub, four direct pages, review links, feedback pins and synchronized hub editing, recoverable removal, mobile menu, role controls, accordions, form fallbacks, directory filters, A–Z navigation, the Variation B map controls, consent gate, responsive layouts, relative assets, true footer closure, and browser console. After publishing, confirm the comment snapshot is intact and repeat the basic link, asset, mobile, footer, and console checks against the deployed URLs.

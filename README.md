@@ -1,13 +1,13 @@
-# Michigan Moves Website Concepts
+# Michigan Moves Final Page Review
 
-This repository contains a single, no-build GitHub Pages hub for sharing Michigan Moves webpage concepts during internal review. It does not modify or deploy to the live Michigan Moves website.
+This repository contains a single, no-build GitHub Pages hub for reviewing the two final Michigan Moves webpage drafts. It does not modify or deploy to the live Michigan Moves WordPress website.
 
-The hub groups completed variations for two pages:
+The hub links to the current final direction for two pages:
 
-- Get Involved — Variation A (final comparison-first direction)
-- Get Involved — Variation B (guided-choice)
-- Coalition Directory — Variation A (final search-first cards direction)
-- Coalition Directory — Variation B (directory-first alphabetical rows)
+- Get Involved — final comparison-first direction
+- Coalition Directory — final search-first cards direction
+
+Earlier Variation B pages remain in the repository as unlinked review history. The stable Variation A URLs and their `data-feedback-page` identifiers are unchanged so existing comments remain attached.
 
 Every hosted page includes a review notice, a link back to the hub, and `noindex, nofollow` metadata. These measures discourage indexing; they do **not** make GitHub Pages private.
 
@@ -62,12 +62,10 @@ The repository is `fishinthesea7/michigan-moves-web-concepts`, and GitHub Pages 
 
 `https://fishinthesea7.github.io/michigan-moves-web-concepts/`
 
-### Stable direct prototype URLs
+### Stable direct final-review URLs
 
 - `https://fishinthesea7.github.io/michigan-moves-web-concepts/get-involved/variation-a/`
-- `https://fishinthesea7.github.io/michigan-moves-web-concepts/get-involved/variation-b/`
 - `https://fishinthesea7.github.io/michigan-moves-web-concepts/directory/variation-a/`
-- `https://fishinthesea7.github.io/michigan-moves-web-concepts/directory/variation-b/`
 
 The hub URL is the normal link to share for review. Direct links are stable bookmarks for individual concepts.
 
@@ -155,14 +153,12 @@ Serve the canonical publishing folder so local paths match GitHub Pages behavior
 python3 -m http.server 4173 --bind 127.0.0.1 --directory docs
 ```
 
-Open:
+Open the review hub and current final pages:
 
 ```text
 http://127.0.0.1:4173/
 http://127.0.0.1:4173/get-involved/variation-a/
-http://127.0.0.1:4173/get-involved/variation-b/
 http://127.0.0.1:4173/directory/variation-a/
-http://127.0.0.1:4173/directory/variation-b/
 ```
 
 The prototypes load the current public Michigan Moves logo and Inter font over the internet. Page layout and interactions are served locally from `docs/`.
@@ -182,21 +178,19 @@ Follow the durable rules in `AGENTS.md`.
 
 Edit the existing `index.html` and shared assets in place. Do not rename its page or variation folders, because those paths are the stable review URLs. Verify the existing direct URL after every deployment.
 
-## Variation notes
+## Current final directions
 
 ### Get Involved
 
-- **Variation A — final comparison-first direction:** A lean split-image hero leads to a proof strip and two plain-language comparison lanes. Commitment is reduced to the decisive numbers—zero required meetings for Ambassadors and four virtual meetings per year for Members—while activities and benefits remain available through progressive disclosure. A restrained Partner rail, dark three-step registration runway, honest form fallback, and role-specific onboarding complete one continuous decision path.
-- **Variation B — guided-choice:** Accessible role tabs and a live detail panel, expandable full comparison, selected-role context in a vertical process, live-form fallback panel, and expandable onboarding sections.
+The final page uses a welcoming split-image hero, the heading “Join the Michigan Moves Coalition,” and the framing “Two roles. One mission.” The Ambassador and Coalition Member paths use plain commitment text rather than dashboard-style metric tiles. Member participation is stated as four quarterly virtual meetings plus one sector committee call each quarter. Registration is the primary action, followed by one compact role-specific confirmation bar.
 
-Both versions use the same approved role content. Selecting either standard pathway preserves the selection on the page, moves focus to the registration section, and clearly states that the external form is not prefilled. The Partner route continues to use `https://mimoves.org/contact-us/`; the live registration form continues to use `https://wkf.ms/4gKvw3b`.
+Selecting either pathway preserves the selection on the page, moves focus to the registration section, and clearly states that the external form is not prefilled. The Partner route continues to use `https://mimoves.org/contact-us/`; the registration form continues to use `https://wkf.ms/4gKvw3b`.
 
 ### Coalition Directory
 
-- **Variation A — final search-first cards direction:** A lean split-image hero moves directly into a large labeled search field and live result count. Primary roles are immediate quick filters; sector, geography, and CEO Pledge status are secondary refinements. A compact role legend, prominent A–Z navigation, equal-sized scan-friendly cards, and inline profile expansions keep organization-finding—not interface explanation—as the page’s main task. The map remains removed because Michigan Moves is not introducing it yet.
-- **Variation B — alphabetical rows:** Persistent desktop filters, a collapsed mobile filter disclosure, prominent A–Z navigation, compact inline-expandable rows, and a secondary prototype map disclosure.
+The final page uses the search-first card direction: a large labeled search field, live result count, primary-role quick filters, secondary refinements, A-Z navigation, and inline profile expansions. The decorative people circles have been removed from the preview. The map remains removed because Michigan Moves is not introducing it yet.
 
-Both versions use `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, map calculations, A–Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
+The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, A-Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
 
 Change the temporary visible person label once in `window.MMC_DIRECTORY_CONFIG.representativeLabel` inside `docs/assets/directory-data.js`.
 

@@ -10,7 +10,7 @@
     },
     member: {
       name: 'Coalition Member',
-      description: 'Active participation through four virtual sector meetings per year, plus occasional between-meeting contribution.'
+      description: 'Active participation through one virtual sector committee meeting each quarter, plus occasional between-meeting contribution.'
     }
   };
 
@@ -58,10 +58,6 @@
         if (name) name.textContent = content.name;
         if (description) description.textContent = content.description;
       });
-      root.querySelectorAll('[data-next-role]').forEach(function (details) {
-        details.open = details.getAttribute('data-next-role') === role;
-      });
-
       joinSection.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
       var selectedNotice = joinSection.querySelector('[data-selected-pathway]');
       if (selectedNotice) {

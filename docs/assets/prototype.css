@@ -1209,6 +1209,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-pathway-lane > header { min-height: 152px; margin-bottom: 18px; padding-top: 32px; padding-bottom: 24px; }
 .mmc-pathway-lane header > p:last-child { max-width: 46ch; }
 .mmc-pathway-commitment { min-height: 96px; margin-bottom: 24px; padding-block: 16px; }
+.mmc-pathway-best { min-height: 122px; margin-bottom: 18px; }
 
 .mmc-directory-hero__actions { width: min(100%,460px); margin-top: 28px; display: grid; gap: 9px; }
 .mmc-directory-hero__search-action { width: 100%; min-height: 64px; justify-content: space-between; padding-inline: 28px; font-size: 17px; }
@@ -1240,8 +1241,10 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-sector-multiselect__panel > button { width: 100%; min-height: 38px; margin-top: 9px; border: 1px solid var(--mmc-border); border-radius: 5px; background: var(--mmc-light); color: var(--mmc-primary); font-size: 12px; font-weight: 800; cursor: pointer; }
 .mmc-sector-multiselect__panel > button:disabled { opacity: .48; cursor: default; }
 
+.mmc-directory--a.mmc-final-a .mmc-directory-command-section { padding-bottom: 0; }
+.mmc-directory--a.mmc-final-a .mmc-directory-tools { padding-bottom: 20px; }
 .mmc-directory-join-section { padding-block: 18px; background: var(--mmc-surface-gold); }
-.mmc-directory-join-callout--final { position: relative; overflow: hidden; gap: 34px; padding: 27px 32px; border: 0; border-top: 6px solid var(--mmc-gold); border-radius: 14px; background: linear-gradient(120deg,rgba(23,80,92,.98),rgba(56,91,65,.96)); color: #fff; text-decoration: none; box-shadow: 0 16px 36px rgba(15,56,64,.18); transition: box-shadow .18s ease,transform .18s ease; }
+.mmc-directory-join-callout--final { position: relative; overflow: hidden; gap: 34px; padding: 22px 30px; border: 0; border-top: 6px solid var(--mmc-gold); border-radius: 14px; background: linear-gradient(120deg,rgba(23,80,92,.98),rgba(56,91,65,.96)); color: #fff; text-decoration: none; box-shadow: 0 16px 36px rgba(15,56,64,.18); transition: box-shadow .18s ease,transform .18s ease; }
 .mmc-directory-join-callout--final:hover { color: #fff; box-shadow: 0 20px 44px rgba(15,56,64,.24); transform: translateY(-2px); }
 .mmc-directory-join-callout--final:focus-visible { outline: 4px solid var(--mmc-primary); outline-offset: 3px; }
 .mmc-directory-join-callout--final h2 { margin-bottom: 6px; color: #fff; font-size: clamp(1.7rem,2.7vw,2.35rem); }
@@ -1251,6 +1254,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 
 @media (max-width: 767px) {
   .mmc-chapter-heading--plain h2 { white-space: normal; }
+  .mmc-pathway-best { min-height: 0; }
   .mmc-pathway-lane > header { min-height: 0; margin-bottom: 18px; padding-top: 28px; padding-bottom: 22px; }
   .mmc-directory-preview { min-height: 0; }
   .mmc-directory-hero__actions { width: 100%; }

@@ -188,11 +188,11 @@ The two role cards remain equal in height and share one prominent, full-width re
 
 ### Coalition Directory
 
-The final page uses the search-first card direction: a large labeled search field, live result count, primary-role quick filters, secondary refinements, A-Z navigation, and inline profile expansions. The search control in the hero preview is functional: it moves visitors to the directory controls and focuses the real search input. The closing join panel is larger and visually prioritized as the page’s conversion action. The map remains removed because Michigan Moves is not introducing it yet.
+The final page uses the search-first card direction: a large labeled search field, a live result count, color-coded primary-role quick filters, a custom multi-sector selector, a CEO Pledge refinement, and inline profile expansions. The primary hero action moves visitors to the directory controls. The secondary join action remains visible without competing with search. The closing join panel is a compact, fully clickable conversion card. The map remains removed because Michigan Moves is not introducing it yet.
 
-The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, A-Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
+The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, or rendering. The displayed profile count is calculated from this consent-filtered array every time records or filters change. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
 
-Change the temporary visible person label once in `window.MMC_DIRECTORY_CONFIG.representativeLabel` inside `docs/assets/directory-data.js`.
+Until Monday.com synchronization is designed and approved, `window.MMC_DIRECTORY_RECORDS` in `docs/assets/directory-data.js` is the single manual source of truth. Add, remove, or revise one record object there; do not hand-edit card HTML. Keep `directoryConsent` explicit, use only values listed in `window.MMC_DIRECTORY_CONFIG.sectors`, and update the temporary visible person label once in `window.MMC_DIRECTORY_CONFIG.representativeLabel`.
 
 ## WordPress / Elementor handoff
 

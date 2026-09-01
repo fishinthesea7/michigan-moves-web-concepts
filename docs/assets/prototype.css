@@ -1045,8 +1045,8 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-proof-strip span { max-width: 28ch; font-size: 15px; line-height: 1.45; }
 .mmc-proof-strip strong { font-size: 40px; }
 
-.mmc-pathway-section { background: linear-gradient(180deg,#fff 0%,var(--mmc-surface-welcome) 100%); }
-.mmc-pathway-board { gap: 24px; align-items: start; border: 0; }
+.mmc-pathway-section { padding-bottom: 30px; background: linear-gradient(180deg,#fff 0%,var(--mmc-surface-welcome) 100%); }
+.mmc-pathway-board { gap: 24px; align-items: stretch; border: 0; }
 .mmc-pathway-lane { overflow: hidden; padding: 40px; border: 1px solid #d5e0de; border-radius: 16px; background: #fff; box-shadow: 0 16px 38px rgba(15,56,64,.08); }
 .mmc-pathway-lane + .mmc-pathway-lane { border-left: 1px solid #d5e0de; }
 .mmc-pathway-lane > header { min-height: 172px; margin: -40px -40px 28px; padding: 34px 40px 30px; background: var(--mmc-surface-blue); }
@@ -1063,14 +1063,12 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-pathway-details > summary { font-size: 15px; }
 .mmc-pathway-details__body li { font-size: 15px; line-height: 1.55; }
 .mmc-pathway-lane.is-selected { background: #fffdf8; box-shadow: 0 0 0 4px rgba(238,174,104,.42),0 18px 44px rgba(15,56,64,.12); }
-.mmc-role-registration { width: 100%; min-height: 82px; margin-top: auto; padding: 18px 20px; display: flex; flex-direction: column; justify-content: center; border: 2px solid transparent; border-radius: 10px; color: var(--mmc-deep); text-decoration: none; box-shadow: 0 10px 24px rgba(15,56,64,.12); transition: box-shadow .18s ease,transform .18s ease; }
-.mmc-role-registration:hover { color: var(--mmc-deep); box-shadow: 0 14px 30px rgba(15,56,64,.18); transform: translateY(-2px); }
-.mmc-role-registration:focus-visible { outline: 4px solid var(--mmc-gold-strong); outline-offset: 3px; }
-.mmc-role-registration--ambassador { background: var(--mmc-gold); }
-.mmc-role-registration--member { background: #dce9df; border-color: var(--mmc-green); }
-.mmc-role-registration > span { font-size: 17px; font-weight: 900; line-height: 1.25; }
-.mmc-role-registration i { font-style: normal; }
-.mmc-role-registration small { margin-top: 7px; color: rgba(15,56,64,.74); font-size: 11px; font-weight: 750; }
+.mmc-pathway-board__registration { grid-column: 1 / -1; min-height: 88px; padding: 19px 28px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px solid var(--mmc-gold-strong); border-radius: 12px; background: var(--mmc-gold); color: var(--mmc-deep); text-align: center; text-decoration: none; box-shadow: 0 12px 30px rgba(15,56,64,.14); transition: background .18s ease,box-shadow .18s ease,transform .18s ease; }
+.mmc-pathway-board__registration:hover { background: var(--mmc-gold-strong); color: var(--mmc-deep); box-shadow: 0 16px 36px rgba(15,56,64,.2); transform: translateY(-2px); }
+.mmc-pathway-board__registration:focus-visible { outline: 4px solid var(--mmc-primary); outline-offset: 3px; }
+.mmc-pathway-board__registration > span { font-size: clamp(1.25rem,2vw,1.6rem); font-weight: 900; line-height: 1.2; }
+.mmc-pathway-board__registration i { font-style: normal; }
+.mmc-pathway-board__registration small { margin-top: 7px; color: rgba(15,56,64,.76); font-size: 12px; font-weight: 750; }
 
 .mmc-registration-focus__heading { max-width: 820px; margin-bottom: 34px; }
 .mmc-registration-focus__heading h2 { margin-bottom: 13px; color: #fff; font-size: clamp(2.4rem,4vw,3.65rem); }
@@ -1088,7 +1086,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-registration-primary i { font-style: normal; }
 .mmc-registration-primary small { margin-top: 14px; color: rgba(15,56,64,.78); font-size: 13px; font-weight: 750; }
 
-.mmc-follow-up-section { padding: 34px 0; background: var(--mmc-light); }
+.mmc-follow-up-section { padding: 18px 0 34px; background: var(--mmc-light); }
 .mmc-follow-up-bar { padding: 28px 32px; display: grid; grid-template-columns: minmax(210px,.55fr) minmax(0,1.5fr) auto; gap: 30px; align-items: center; border-left: 7px solid var(--mmc-gold-strong); background: #fff; box-shadow: 0 10px 28px rgba(15,56,64,.07); }
 .mmc-follow-up-bar__heading h2 { margin: 0; font-size: clamp(1.55rem,2.5vw,2.1rem); }
 .mmc-follow-up-bar__roles { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }

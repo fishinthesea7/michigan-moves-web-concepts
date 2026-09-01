@@ -184,7 +184,7 @@ Edit the existing `index.html` and shared assets in place. Do not rename its pag
 
 The final page uses a welcoming split-image hero, the heading “Join the Michigan Moves Coalition,” and the framing “Two roles. One mission.” A role-path graphic replaces the earlier decorative dots. The Ambassador and Coalition Member paths use plain commitment text rather than dashboard-style metric tiles. Member participation is stated as four quarterly virtual meetings plus one sector committee call each quarter.
 
-Registration is placed directly inside both role cards through prominent, role-specific links to `https://wkf.ms/4gKvw3b`. The earlier standalone registration section and facts strip have been removed. One compact bar explains the different follow-up each role receives after registering.
+The two role cards remain equal in height and share one prominent, full-width registration action linking to `https://wkf.ms/4gKvw3b`, because the official form handles both pathways. The earlier standalone registration section and facts strip have been removed. One compact bar explains the different follow-up each role receives after registering.
 
 ### Coalition Directory
 

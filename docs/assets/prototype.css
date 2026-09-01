@@ -1150,7 +1150,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-directory-join-callout--final > * { position: relative; z-index: 1; }
 .mmc-directory-join-callout--final .mmc-eyebrow { color: var(--mmc-gold); }
 .mmc-directory-join-callout--final h2 { margin-bottom: 12px; font-size: clamp(2.2rem,3.5vw,3.25rem); }
-.mmc-directory-join-callout--final p { max-width: 58ch; color: #fff; font-size: 17px; line-height: 1.6; }
+.mmc-directory-join-callout--final p,.mmc-directory-join-callout--final p:last-child { max-width: 58ch; color: #fff; font-size: 17px; line-height: 1.6; }
 .mmc-directory-join-callout--final .mmc-btn { min-height: 64px; padding: 18px 28px; border: 2px solid var(--mmc-gold); background: var(--mmc-gold); color: var(--mmc-deep); white-space: nowrap; font-size: 16px; box-shadow: 0 12px 28px rgba(0,0,0,.16); }
 .mmc-directory-join-callout--final .mmc-btn:hover { border-color: #fff; background: #fff; color: var(--mmc-deep); }
 

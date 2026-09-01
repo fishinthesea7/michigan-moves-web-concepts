@@ -64,6 +64,7 @@
     var state = { query: '', roles: [], sector: '', ceo: false };
     var resultsMount = root.querySelector('[data-directory-results]');
     var countMount = root.querySelector('[data-result-count]');
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!config || !Array.isArray(config.sectors) || !resultsMount || !countMount) {
       if (resultsMount) {
@@ -150,6 +151,18 @@
       var search = root.querySelector('[data-directory-search]');
       if (search) search.focus();
     }
+
+    root.querySelectorAll('[data-directory-search-jump]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var search = root.querySelector('[data-directory-search]');
+        var section = root.querySelector('.mmc-directory-command-section');
+        if (!search || !section) return;
+        section.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+        window.setTimeout(function () {
+          search.focus({ preventScroll: true });
+        }, reducedMotion ? 0 : 350);
+      });
+    });
 
     root.querySelectorAll('[data-directory-search]').forEach(function (input) {
       input.addEventListener('input', function () { state.query = input.value; render(); });

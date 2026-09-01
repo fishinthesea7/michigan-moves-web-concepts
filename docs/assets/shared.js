@@ -66,7 +66,7 @@
             '</div>' +
           '</div>' +
         '</div>' +
-        '<div class="mmc-preview-footer__bottom"><p>Standalone prototype preview — page body is isolated for WordPress handoff.</p></div>' +
+        '<div class="mmc-preview-footer__bottom"><p>Standalone prototype preview; page body is isolated for WordPress handoff.</p></div>' +
       '</footer>';
   }
 

@@ -182,13 +182,13 @@ Edit the existing `index.html` and shared assets in place. Do not rename its pag
 
 ### Get Involved
 
-The final page uses a welcoming split-image hero, the heading “Join the Michigan Moves Coalition,” and the framing “Two roles. One mission.” The Ambassador and Coalition Member paths use plain commitment text rather than dashboard-style metric tiles. Member participation is stated as four quarterly virtual meetings plus one sector committee call each quarter. Registration is the primary action, followed by one compact role-specific confirmation bar.
+The final page uses a welcoming split-image hero, the heading “Join the Michigan Moves Coalition,” and the framing “Two roles. One mission.” A role-path graphic replaces the earlier decorative dots. The Ambassador and Coalition Member paths use plain commitment text rather than dashboard-style metric tiles. Member participation is stated as four quarterly virtual meetings plus one sector committee call each quarter.
 
-Selecting either pathway preserves the selection on the page, moves focus to the registration section, and clearly states that the external form is not prefilled. The Partner route continues to use `https://mimoves.org/contact-us/`; the registration form continues to use `https://wkf.ms/4gKvw3b`.
+Registration is placed directly inside both role cards through prominent, role-specific links to `https://wkf.ms/4gKvw3b`. The earlier standalone registration section and facts strip have been removed. One compact bar explains the different follow-up each role receives after registering.
 
 ### Coalition Directory
 
-The final page uses the search-first card direction: a large labeled search field, live result count, primary-role quick filters, secondary refinements, A-Z navigation, and inline profile expansions. The decorative people circles have been removed from the preview. The map remains removed because Michigan Moves is not introducing it yet.
+The final page uses the search-first card direction: a large labeled search field, live result count, primary-role quick filters, secondary refinements, A-Z navigation, and inline profile expansions. The search control in the hero preview is functional: it moves visitors to the directory controls and focuses the real search input. The closing join panel is larger and visually prioritized as the page’s conversion action. The map remains removed because Michigan Moves is not introducing it yet.
 
 The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, A-Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
 

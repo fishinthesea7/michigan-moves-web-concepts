@@ -182,17 +182,17 @@ Edit the existing `index.html` and shared assets in place. Do not rename its pag
 
 ### Get Involved
 
-The final page uses a welcoming split-image hero and the heading “Join the Michigan Moves Coalition.” The hero’s supporting card presents Ambassador and Coalition Member as two parallel options aligned around one mission, without decorative dots, a pathway metaphor, or redundant eyebrow labels. The role cards use plain commitment text rather than dashboard-style metric tiles. Member participation is stated as four virtual sector committee meetings per year, one each quarter, plus occasional work between meetings.
+The final page uses a welcoming photographic hero and the heading “Join the Michigan Moves Coalition.” The Ambassador and Coalition Member paths use plain commitment text rather than dashboard-style metric tiles. Member participation is stated as four quarterly virtual meetings plus one sector committee call each quarter. One prominent, full-width action links to the official form, followed by a distinct role-specific confirmation section.
 
-The two role cards remain equal in height and share one prominent, full-width registration action linking to `https://wkf.ms/4gKvw3b`, because the official form handles both pathways. The earlier standalone registration section and facts strip have been removed. One compact bar explains the different follow-up each role receives after registering.
+The registration action opens the official form in a new tab and continues to use `https://wkf.ms/4gKvw3b`.
 
 ### Coalition Directory
 
-The final page uses the search-first card direction: a large labeled search field, a live result count, color-coded primary-role quick filters, a custom multi-sector selector, a CEO Pledge refinement, and inline profile expansions. The primary hero action moves visitors to the directory controls. The secondary join action remains visible without competing with search. The closing join panel is a compact, fully clickable conversion card. The map remains removed because Michigan Moves is not introducing it yet.
+The final page uses the search-first card direction: the hero search control scrolls to and focuses the single working search field, followed by a live result count, primary-role quick filters, secondary refinements, and people-first profile cards. Each card includes a circular headshot or initials fallback, name, role, title, organization, sector, and organization website. The map remains removed because Michigan Moves is not introducing it yet.
 
-The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, or rendering. The displayed profile count is calculated from this consent-filtered array every time records or filters change. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
+The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, A-Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
 
-Until Monday.com synchronization is designed and approved, `window.MMC_DIRECTORY_RECORDS` in `docs/assets/directory-data.js` is the single manual source of truth. Add, remove, or revise one record object there; do not hand-edit card HTML. Keep `directoryConsent` explicit, use only values listed in `window.MMC_DIRECTORY_CONFIG.sectors`, and update the temporary visible person label once in `window.MMC_DIRECTORY_CONFIG.representativeLabel`.
+Change the temporary visible person label once in `window.MMC_DIRECTORY_CONFIG.representativeLabel` inside `docs/assets/directory-data.js`.
 
 ## WordPress / Elementor handoff
 

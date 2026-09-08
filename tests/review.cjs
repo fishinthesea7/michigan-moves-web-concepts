@@ -25,12 +25,13 @@ function assert(condition, message) {
         assert(await page.locator('.mmc-review-bar').count() === 0, 'Directory still shows a review notice');
         assert(await page.getByText('Preview uses sample profiles').count() === 0, 'Directory still shows sample-profile language');
         assert(await page.locator('.mmc-directory-preview').count() === 0, 'Directory hero tile was not removed');
-        assert((await page.locator('.mmc-final-hero').evaluate(element => getComputedStyle(element).backgroundImage)).includes('directory-coalition-crosswalk.jpg'), 'New Directory background image is not active');
+        assert((await page.locator('.mmc-final-hero').evaluate(element => getComputedStyle(element).backgroundImage)).includes('directory-group-hiking.jpg'), 'Approved Directory background image is not active');
         if (width === 1440) {
           const directoryHeroHeight = await page.locator('.mmc-final-hero').evaluate(element => Math.round(element.getBoundingClientRect().height));
           assert(directoryHeroHeight <= 400, `Directory hero is still too tall: ${directoryHeroHeight}px`);
         }
-        assert(await page.locator('.mmc-person-avatar').count() === 8, 'Consent filter or profile rendering failed');
+        assert(await page.locator('.mmc-org-logo').count() === 8, 'Organization logos or profile rendering failed');
+        assert(await page.locator('.mmc-person-avatar').count() === 0, 'Headshot circles remain in the directory');
         assert(await page.locator('.mmc-update-profile').count() === 0, 'Update-profile button was not removed');
         assert(await page.locator('[data-profile-toggle]').count() === 0, 'View-profile controls were not removed');
         assert(await page.locator('.mmc-profile-expansion').count() === 0, 'Expanded profile sections were not removed');
@@ -76,6 +77,13 @@ function assert(condition, message) {
         assert(await page.getByText('Directory visibility is optional').count() === 0, 'Directory-visibility bars were not removed');
         assert(await page.locator('.mmc-form-note').count() === 0, 'Registration form note was not removed');
         assert((await page.locator('.mmc-final-hero').evaluate(element => getComputedStyle(element).backgroundImage)).includes('get-involved-group-activity.jpg'), 'New Get Involved background image is not active');
+        if (width === 1440) {
+          const heroImageStyle = await page.locator('.mmc-final-hero').evaluate(element => {
+            const style = getComputedStyle(element);
+            return { position: style.backgroundPosition, size: style.backgroundSize };
+          });
+          assert(heroImageStyle.size === '125% auto' && heroImageStyle.position.startsWith('0%'), 'Get Involved hero is not focused on the woman leading the movement');
+        }
         assert(await page.locator('.mmc-proof-strip p').nth(2).locator('span').innerText() === 'Sectors aligned', 'Sector statistic text was not shortened');
         assert(parseFloat(await page.locator('.mmc-proof-strip span').first().evaluate(element => getComputedStyle(element).fontSize)) >= 17, 'Statistic text is still too small');
         assert(await page.locator('.mmc-follow-up-bar__heading p').count() === 0, 'Superseded next-steps sentence remains');
@@ -123,10 +131,10 @@ function assert(condition, message) {
   await page.screenshot({ path: '/tmp/mimoves-get-involved.png', fullPage: true });
 
   await page.goto(`${baseUrl}/directory/variation-a/`);
-  await page.evaluate(() => { window.MMC_DIRECTORY_RECORDS[0].headshotUrl = '/missing-photo.jpg'; });
+  await page.evaluate(() => { window.MMC_DIRECTORY_RECORDS[0].organizationLogoUrl = '/missing-logo.jpg'; });
   await page.addScriptTag({ url: `${baseUrl}/assets/directory.js` });
   await page.waitForTimeout(200);
-  assert(await page.locator('.mmc-person-avatar img').count() === 0, 'Broken photo did not fall back to initials');
+  assert(await page.locator('.mmc-org-logo img').count() === 0, 'Broken logo did not fall back to organization initials');
   await page.screenshot({ path: '/tmp/mimoves-directory.png', fullPage: true });
 
   console.log('Page errors', errors);

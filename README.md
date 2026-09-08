@@ -188,7 +188,7 @@ The registration action opens the official form in a new tab and continues to us
 
 ### Coalition Directory
 
-The final page uses the search-first card direction: the hero search control scrolls to and focuses the single working search field, followed by a live result count, primary-role quick filters, secondary refinements, and people-first profile cards. Each card includes a circular headshot or initials fallback, name, role, title, organization, sector, and organization website. The map remains removed because Michigan Moves is not introducing it yet.
+The final page uses the search-first card direction: the hero search control scrolls to and focuses the single working search field, followed by a live result count, primary-role quick filters, secondary refinements, and people-first profile cards. Each card includes a circular organization logo or organization-initials fallback, name, role, title, organization, sector, and organization website. The map remains removed because Michigan Moves is not introducing it yet.
 
 The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, A-Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
 

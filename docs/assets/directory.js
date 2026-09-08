@@ -36,12 +36,14 @@
     try { var url = new URL(value, document.baseURI); return /^https?:$/.test(url.protocol) ? url.href : ''; } catch (_) { return ''; }
   }
 
-  function avatarMarkup(record) {
-    var parts = record.representativeName.trim().split(/\s+/);
+  function organizationLogoMarkup(record) {
+    var parts = record.organizationName.trim().split(/\s+/);
     var initials = (Array.from(parts[0] || '')[0] || '') + (parts.length > 1 ? Array.from(parts[parts.length - 1])[0] : '');
-    var color = Array.from(record.representativeName + record.organizationName).reduce(function (sum, char) { return sum + char.codePointAt(0); }, 0) % 3;
-    var photo = record.headshotUrl ? safeUrl(record.headshotUrl) : '';
-    return '<div class="mmc-person-avatar mmc-person-avatar--' + color + '" aria-hidden="true"><span>' + escapeHtml(initials.toUpperCase()) + '</span>' + (photo ? '<img src="' + escapeHtml(photo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
+    var placeholderNumber = record.organizationName.match(/^Organization Name\s+(\d+)$/i);
+    if (placeholderNumber) initials = placeholderNumber[1].slice(-2);
+    var color = Array.from(record.organizationName).reduce(function (sum, char) { return sum + char.codePointAt(0); }, 0) % 3;
+    var logo = record.organizationLogoUrl ? safeUrl(record.organizationLogoUrl) : '';
+    return '<div class="mmc-org-logo mmc-org-logo--' + color + '" aria-hidden="true"><span>' + escapeHtml(initials.toUpperCase()) + '</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
   }
 
   function websiteMarkup(record) {
@@ -52,7 +54,7 @@
   function cardMarkup(record) {
     return '<article class="mmc-directory-card">' +
         '<div class="mmc-directory-card__top">' +
-          avatarMarkup(record) +
+          organizationLogoMarkup(record) +
           '<div class="mmc-directory-card__heading"><h3>' + escapeHtml(record.representativeName) + '</h3><div class="mmc-badge-row">' + badgeMarkup(record) + '</div></div>' +
         '</div>' +
         '<p class="mmc-person-work"><strong>' + escapeHtml(record.representativeTitle) + '</strong><span>' + escapeHtml(record.organizationName) + '</span></p>' +
@@ -136,7 +138,7 @@
     }
 
     function attachResultEvents() {
-      resultsMount.querySelectorAll('.mmc-person-avatar img').forEach(function (image) {
+      resultsMount.querySelectorAll('.mmc-org-logo img').forEach(function (image) {
         image.addEventListener('error', function () { image.remove(); });
         if (image.complete && !image.naturalWidth) image.remove();
       });

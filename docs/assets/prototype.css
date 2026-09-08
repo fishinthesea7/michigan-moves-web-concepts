@@ -1291,10 +1291,10 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 }
 
 /* September review: people first, shared registration and compact next steps. */
-.mmc-person-avatar { position:relative; width:80px; height:80px; flex:0 0 80px; border-radius:50%; overflow:hidden; display:grid; place-items:center; background:#17505c; color:#fff; font-size:26px; font-weight:800; }
-.mmc-person-avatar--1 { background:#385b41; }
-.mmc-person-avatar--2 { background:#efd78e; color:#17505c; }
-.mmc-person-avatar img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.mmc-org-logo { position:relative; width:80px; height:80px; flex:0 0 80px; border:2px solid rgba(23,80,92,.12); border-radius:50%; overflow:hidden; display:grid; place-items:center; background:#17505c; color:#fff; font-size:22px; font-weight:850; letter-spacing:.03em; box-shadow:0 7px 18px rgba(15,56,64,.12); }
+.mmc-org-logo--1 { background:#385b41; }
+.mmc-org-logo--2 { background:#efd78e; color:#17505c; }
+.mmc-org-logo img { position:absolute; inset:7px; width:calc(100% - 14px); height:calc(100% - 14px); object-fit:contain; }
 .mmc-person-work { margin:16px 0 8px; line-height:1.5; }
 .mmc-person-work strong,.mmc-person-work span { display:block; }
 .mmc-person-website { display:inline-flex; align-items:center; min-height:44px; gap:6px; }
@@ -1320,7 +1320,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-directory-command__actions { display:flex; align-items:center; gap:16px; }
 .mmc-directory-command__actions > p { margin:0; color:var(--mmc-primary); font-size:16px; font-weight:800; white-space:nowrap; }
 .mmc-update-profile { min-height:48px; padding:12px 18px; white-space:nowrap; }
-@media(max-width:800px) { .mmc-final-a .mmc-follow-up-bar { grid-template-columns:1fr; } .mmc-person-avatar { width:64px; height:64px; flex-basis:64px; } }
+@media(max-width:800px) { .mmc-final-a .mmc-follow-up-bar { grid-template-columns:1fr; } .mmc-org-logo { width:64px; height:64px; flex-basis:64px; font-size:18px; } }
 @media(max-width:800px) { .mmc-directory-command__actions { width:100%; align-items:flex-start; flex-direction:column; } .mmc-update-profile { width:100%; } }
 
 /* Final comment pass: tighter flow and people-first profile hierarchy. */
@@ -1528,8 +1528,8 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 /* Coalition Directory hero: community movement with a shorter composition. */
 .mmc-directory--a.mmc-final-a .mmc-final-hero {
   min-height:390px;
-  background-image:url("./images/directory-coalition-crosswalk.jpg");
-  background-position:center 54%;
+  background-image:url("./images/directory-group-hiking.jpg");
+  background-position:center 43%;
 }
 .mmc-directory--a.mmc-final-a .mmc-final-hero::before {
   background:linear-gradient(90deg,rgba(9,48,56,.97) 0%,rgba(15,56,64,.91) 40%,rgba(23,80,92,.6) 64%,rgba(15,56,64,.24) 100%);
@@ -1779,4 +1779,17 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-involved--a.mmc-final-a .mmc-shared-register { min-height:84px; padding:18px 22px; }
   .mmc-involved--a.mmc-final-a .mmc-shared-register strong { font-size:23px; }
   .mmc-directory--a.mmc-final-a .mmc-directory-join-callout--final { min-height:0; padding:32px 24px; }
+}
+
+/* Latest image positioning and organization-logo feedback. */
+.mmc-involved--a.mmc-final-a .mmc-final-hero {
+  background-size:125% auto;
+  background-position:left 48%;
+}
+@media(max-width:767px) {
+  .mmc-involved--a.mmc-final-a .mmc-final-hero {
+    background-size:cover;
+    background-position:43% center;
+  }
+  .mmc-directory--a.mmc-final-a .mmc-final-hero { background-position:48% center; }
 }

@@ -32,27 +32,32 @@
     }).join('') + '</div>';
   }
 
-  function detailMarkup(record) {
-    return '<div class="mmc-profile-expansion__intro"><p>' + escapeHtml(record.shortDescription) + '</p></div>' +
-      '<dl class="mmc-profile-detail-grid">' +
-        '<div><dt>' + escapeHtml(config.representativeLabel) + '</dt><dd>' + escapeHtml(record.representativeName) + '<br><span>' + escapeHtml(record.representativeTitle) + '</span></dd></div>' +
-        '<div><dt>Sector' + (record.sectors.length > 1 ? 's' : '') + '</dt><dd>' + record.sectors.map(escapeHtml).join('<br>') + '</dd></div>' +
-        '<div><dt>Website</dt><dd><a class="mmc-text-link" href="' + escapeHtml(record.website) + '" target="_blank" rel="noopener">Visit website <span aria-hidden="true">↗</span><span class="mmc-visually-hidden"> (opens in a new tab)</span></a></dd></div>' +
-      '</dl>';
+  function safeUrl(value) {
+    try { var url = new URL(value, document.baseURI); return /^https?:$/.test(url.protocol) ? url.href : ''; } catch (_) { return ''; }
   }
 
-  function cardMarkup(record, index) {
-    var id = 'card-profile-' + index + '-' + slug(record.organizationName);
-    var buttonId = id + '-toggle';
+  function avatarMarkup(record) {
+    var parts = record.representativeName.trim().split(/\s+/);
+    var initials = (Array.from(parts[0] || '')[0] || '') + (parts.length > 1 ? Array.from(parts[parts.length - 1])[0] : '');
+    var color = Array.from(record.representativeName + record.organizationName).reduce(function (sum, char) { return sum + char.codePointAt(0); }, 0) % 3;
+    var photo = record.headshotUrl ? safeUrl(record.headshotUrl) : '';
+    return '<div class="mmc-person-avatar mmc-person-avatar--' + color + '" aria-hidden="true"><span>' + escapeHtml(initials.toUpperCase()) + '</span>' + (photo ? '<img src="' + escapeHtml(photo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
+  }
+
+  function websiteMarkup(record) {
+    var url = record.website ? safeUrl(record.website) : '';
+    return url ? '<a class="mmc-profile-website mmc-card-website" href="' + escapeHtml(url) + '" target="_blank" rel="noopener">Website <span aria-hidden="true">↗</span><span class="mmc-visually-hidden"> for ' + escapeHtml(record.organizationName) + ' (opens in a new tab)</span></a>' : '';
+  }
+
+  function cardMarkup(record) {
     return '<article class="mmc-directory-card">' +
         '<div class="mmc-directory-card__top">' +
-          '<div class="mmc-logo-placeholder" aria-label="Organization logo">' + escapeHtml(record.organizationLogo) + '</div>' +
-          '<div class="mmc-directory-card__heading"><div class="mmc-badge-row">' + badgeMarkup(record) + '</div><h3>' + escapeHtml(record.organizationName) + '</h3></div>' +
+          avatarMarkup(record) +
+          '<div class="mmc-directory-card__heading"><h3>' + escapeHtml(record.representativeName) + '</h3><div class="mmc-badge-row">' + badgeMarkup(record) + '</div></div>' +
         '</div>' +
-        '<p class="mmc-directory-card__representative"><span>' + escapeHtml(config.representativeLabel) + '</span>' + escapeHtml(record.representativeName) + ' · ' + escapeHtml(record.representativeTitle) + '</p>' +
+        '<p class="mmc-person-work"><strong>' + escapeHtml(record.representativeTitle) + '</strong><span>' + escapeHtml(record.organizationName) + '</span></p>' +
         sectorTagMarkup(record) +
-        '<button class="mmc-profile-toggle" id="' + buttonId + '" type="button" data-profile-toggle aria-expanded="false" aria-controls="' + id + '"><span data-toggle-label>View profile</span><span data-toggle-icon aria-hidden="true">+</span></button>' +
-        '<div class="mmc-profile-expansion" id="' + id + '" role="region" aria-labelledby="' + buttonId + '" hidden>' + detailMarkup(record) + '</div>' +
+        websiteMarkup(record) +
       '</article>';
   }
 
@@ -66,6 +71,15 @@
     var resultsMount = root.querySelector('[data-directory-results]');
     var countMount = root.querySelector('[data-result-count]');
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    root.querySelectorAll('[data-directory-jump]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var search = root.querySelector('[data-directory-search]');
+        if (!search) return;
+        search.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+        window.setTimeout(function () { search.focus({ preventScroll: true }); }, 350);
+      });
+    });
 
     if (!config || !Array.isArray(config.sectors) || !resultsMount || !countMount) {
       if (resultsMount) {
@@ -89,7 +103,7 @@
           (!state.sectors.length || state.sectors.some(function (sector) { return record.sectors.includes(sector); })) &&
           (!state.ceo || record.ceoPledgeSigner === true);
       }).sort(function (a, b) {
-        return a.organizationName.localeCompare(b.organizationName, undefined, { numeric: true });
+        return a.representativeName.localeCompare(b.representativeName, undefined, { numeric: true });
       });
     }
 
@@ -121,24 +135,10 @@
       });
     }
 
-    function setProfileState(button, open) {
-      var panel = document.getElementById(button.getAttribute('aria-controls'));
-      if (!panel) return;
-      button.setAttribute('aria-expanded', String(open));
-      button.querySelector('[data-toggle-icon]').textContent = open ? '−' : '+';
-      button.querySelector('[data-toggle-label]').textContent = open ? 'Hide profile' : 'View profile';
-      panel.hidden = !open;
-    }
-
     function attachResultEvents() {
-      resultsMount.querySelectorAll('[data-profile-toggle]').forEach(function (button) {
-        button.addEventListener('click', function () {
-          var shouldOpen = button.getAttribute('aria-expanded') !== 'true';
-          resultsMount.querySelectorAll('[data-profile-toggle]').forEach(function (otherButton) {
-            setProfileState(otherButton, false);
-          });
-          if (shouldOpen) setProfileState(button, true);
-        });
+      resultsMount.querySelectorAll('.mmc-person-avatar img').forEach(function (image) {
+        image.addEventListener('error', function () { image.remove(); });
+        if (image.complete && !image.naturalWidth) image.remove();
       });
     }
 

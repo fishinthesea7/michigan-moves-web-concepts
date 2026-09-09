@@ -29,8 +29,14 @@ function assert(condition, message) {
         if (width === 1440) {
           const directoryHeroHeight = await page.locator('.mmc-final-hero').evaluate(element => Math.round(element.getBoundingClientRect().height));
           assert(directoryHeroHeight <= 400, `Directory hero is still too tall: ${directoryHeroHeight}px`);
+          const directoryHeroStyle = await page.locator('.mmc-final-hero').evaluate(element => {
+            const style = getComputedStyle(element);
+            return { position: style.backgroundPosition, size: style.backgroundSize };
+          });
+          assert(directoryHeroStyle.size === '118% auto' && directoryHeroStyle.position === '0% 34%', 'Directory hero is not focused on the hikers');
         }
         assert(await page.locator('.mmc-org-logo').count() === 8, 'Organization logos or profile rendering failed');
+        assert(await page.locator('.mmc-org-logo span').allInnerTexts().then(labels => labels.every(label => label.toLowerCase() === 'logo')), 'Organization-logo placeholders do not use the requested label');
         assert(await page.locator('.mmc-person-avatar').count() === 0, 'Headshot circles remain in the directory');
         assert(await page.locator('.mmc-update-profile').count() === 0, 'Update-profile button was not removed');
         assert(await page.locator('[data-profile-toggle]').count() === 0, 'View-profile controls were not removed');
@@ -82,7 +88,7 @@ function assert(condition, message) {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
-          assert(heroImageStyle.size === '125% auto' && heroImageStyle.position.startsWith('0%'), 'Get Involved hero is not focused on the woman leading the movement');
+          assert(heroImageStyle.size === '135% auto' && heroImageStyle.position === '0% 20%', 'Get Involved hero is not focused on the participants’ faces');
         }
         assert(await page.locator('.mmc-proof-strip p').nth(2).locator('span').innerText() === 'Sectors aligned', 'Sector statistic text was not shortened');
         assert(parseFloat(await page.locator('.mmc-proof-strip span').first().evaluate(element => getComputedStyle(element).fontSize)) >= 17, 'Statistic text is still too small');

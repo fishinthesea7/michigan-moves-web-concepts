@@ -37,13 +37,9 @@
   }
 
   function organizationLogoMarkup(record) {
-    var parts = record.organizationName.trim().split(/\s+/);
-    var initials = (Array.from(parts[0] || '')[0] || '') + (parts.length > 1 ? Array.from(parts[parts.length - 1])[0] : '');
-    var placeholderNumber = record.organizationName.match(/^Organization Name\s+(\d+)$/i);
-    if (placeholderNumber) initials = placeholderNumber[1].slice(-2);
     var color = Array.from(record.organizationName).reduce(function (sum, char) { return sum + char.codePointAt(0); }, 0) % 3;
     var logo = record.organizationLogoUrl ? safeUrl(record.organizationLogoUrl) : '';
-    return '<div class="mmc-org-logo mmc-org-logo--' + color + '" aria-hidden="true"><span>' + escapeHtml(initials.toUpperCase()) + '</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
+    return '<div class="mmc-org-logo mmc-org-logo--' + color + '" aria-hidden="true"><span>Logo</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
   }
 
   function websiteMarkup(record) {

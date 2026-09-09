@@ -33,7 +33,7 @@ function assert(condition, message) {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
-          assert(directoryHeroStyle.size === '118% auto' && directoryHeroStyle.position === '0% 34%', 'Directory hero is not focused on the hikers');
+          assert(directoryHeroStyle.size === '108% auto' && directoryHeroStyle.position === '0% 43%', 'Directory hero is not framed to show the full group');
         }
         assert(await page.locator('.mmc-org-logo').count() === 8, 'Organization logos or profile rendering failed');
         assert(await page.locator('.mmc-org-logo span').allInnerTexts().then(labels => labels.every(label => label.toLowerCase() === 'logo')), 'Organization-logo placeholders do not use the requested label');
@@ -88,7 +88,7 @@ function assert(condition, message) {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
-          assert(heroImageStyle.size === '135% auto' && heroImageStyle.position === '0% 20%', 'Get Involved hero is not focused on the participants’ faces');
+          assert(heroImageStyle.size === '135% auto' && heroImageStyle.position === '0% 27%', 'Get Involved hero is not balanced across faces and movement');
         }
         assert(await page.locator('.mmc-proof-strip p').nth(2).locator('span').innerText() === 'Sectors aligned', 'Sector statistic text was not shortened');
         assert(parseFloat(await page.locator('.mmc-proof-strip span').first().evaluate(element => getComputedStyle(element).fontSize)) >= 17, 'Statistic text is still too small');
@@ -107,6 +107,12 @@ function assert(condition, message) {
         assert(registerStyle.shadow !== 'none' && registerStyle.fontSize >= 21, 'Primary registration action is not visually emphasized');
         const heroHeights = await page.locator('.mmc-hero__actions .mmc-btn').evaluateAll(links => links.map(link => Math.round(link.getBoundingClientRect().height)));
         assert(heroHeights.length === 2 && heroHeights[0] === heroHeights[1], `Hero buttons are not equal height: ${heroHeights.join(', ')}`);
+        const pathwayDetails = page.locator('.mmc-pathway-details');
+        assert(await pathwayDetails.count() === 2, 'Expected two role-card expanders');
+        await pathwayDetails.first().locator('summary').click();
+        assert(await pathwayDetails.evaluateAll(items => items.every(item => item.open)), 'Role cards did not expand together');
+        await pathwayDetails.nth(1).locator('summary').click();
+        assert(await pathwayDetails.evaluateAll(items => items.every(item => !item.open)), 'Role cards did not collapse together');
         if (width === 1440) {
           const pathwayHeights = await page.locator('.mmc-pathway-lane').evaluateAll(elements => elements.map(element => Math.round(element.getBoundingClientRect().height)));
           assert(pathwayHeights.length === 2 && pathwayHeights[0] === pathwayHeights[1], `Role-card bottoms are not aligned: ${pathwayHeights.join(', ')}`);

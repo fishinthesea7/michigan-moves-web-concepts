@@ -19,6 +19,18 @@
   document.querySelectorAll('.mmc-involved').forEach(function (root) {
     var roleButtons = root.querySelectorAll('[data-role-target]');
     var rolePanels = root.querySelectorAll('[data-role-panel]');
+    var pathwayDetails = root.querySelectorAll('.mmc-pathway-details');
+
+    /* The two comparison cards move as one so neither column jumps independently. */
+    pathwayDetails.forEach(function (details) {
+      var summary = details.querySelector('summary');
+      if (!summary) return;
+      summary.addEventListener('click', function (event) {
+        event.preventDefault();
+        var nextOpen = !details.open;
+        pathwayDetails.forEach(function (item) { item.open = nextOpen; });
+      });
+    });
 
     function activateRole(role, moveFocus) {
       roleButtons.forEach(function (button) {

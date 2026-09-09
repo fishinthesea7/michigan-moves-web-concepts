@@ -1784,11 +1784,11 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 /* Latest image positioning and organization-logo feedback. */
 .mmc-involved--a.mmc-final-a .mmc-final-hero {
   background-size:135% auto;
-  background-position:left 20%;
+  background-position:left 27%;
 }
 .mmc-directory--a.mmc-final-a .mmc-final-hero {
-  background-size:118% auto;
-  background-position:left 34%;
+  background-size:108% auto;
+  background-position:left 43%;
 }
 @media(max-width:767px) {
   .mmc-involved--a.mmc-final-a .mmc-final-hero {

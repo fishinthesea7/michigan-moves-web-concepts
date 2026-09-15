@@ -47,7 +47,9 @@
   function organizationLogoMarkup(record) {
     var color = Array.from(record.organizationName).reduce(function (sum, char) { return sum + char.codePointAt(0); }, 0) % 3;
     var logo = record.organizationLogoUrl ? safeUrl(record.organizationLogoUrl) : '';
-    return '<div class="mmc-org-logo mmc-org-logo--' + color + '" aria-hidden="true"><span>' + escapeHtml(organizationInitials(record)) + '</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
+    var requestedPadding = Number(record.organizationLogoPadding);
+    var logoPadding = Number.isFinite(requestedPadding) && requestedPadding >= 0 && requestedPadding <= 20 ? requestedPadding : 8;
+    return '<div class="mmc-org-logo mmc-org-logo--' + color + (logo ? ' mmc-org-logo--has-image' : '') + '" style="--mmc-logo-padding:' + logoPadding + 'px" aria-hidden="true"><span>' + escapeHtml(organizationInitials(record)) + '</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
   }
 
   function websiteLinkMarkup(website, organizationName, extraClass) {
@@ -59,9 +61,15 @@
     if (!Array.isArray(record.affiliations) || !record.affiliations.length) {
       return '<p class="mmc-person-work"><strong>' + escapeHtml(record.representativeTitle) + '</strong><span>' + escapeHtml(record.organizationName) + '</span></p>';
     }
-    return '<div class="mmc-affiliations" aria-label="Titles and organizations">' + record.affiliations.map(function (affiliation) {
+    var primary = record.affiliations[0];
+    var additional = record.affiliations.slice(1);
+    var additionalLabel = 'See ' + additional.length + ' more ' + (additional.length === 1 ? 'role and organization' : 'roles and organizations');
+    var primaryMarkup = '<div class="mmc-affiliation mmc-affiliation--primary"><p class="mmc-person-work"><strong>' + escapeHtml(primary.title) + '</strong><span>' + escapeHtml(primary.organizationName) + '</span></p>' + websiteLinkMarkup(primary.website, primary.organizationName, 'mmc-affiliation__website') + '</div>';
+    if (!additional.length) return '<div class="mmc-affiliations" aria-label="Titles and organizations">' + primaryMarkup + '</div>';
+    var additionalMarkup = additional.map(function (affiliation) {
       return '<div class="mmc-affiliation"><p class="mmc-person-work"><strong>' + escapeHtml(affiliation.title) + '</strong><span>' + escapeHtml(affiliation.organizationName) + '</span></p>' + websiteLinkMarkup(affiliation.website, affiliation.organizationName, 'mmc-affiliation__website') + '</div>';
-    }).join('') + '</div>';
+    }).join('');
+    return '<div class="mmc-affiliations" aria-label="Titles and organizations">' + primaryMarkup + '<details class="mmc-affiliations-more"><summary>' + escapeHtml(additionalLabel) + ' <span aria-hidden="true">+</span></summary><div class="mmc-affiliations-more__body"><div class="mmc-affiliations-more__content">' + additionalMarkup + '</div></div></details></div>';
   }
 
   function websiteMarkup(record) {

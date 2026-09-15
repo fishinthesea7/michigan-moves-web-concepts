@@ -20,6 +20,54 @@
     var roleButtons = root.querySelectorAll('[data-role-target]');
     var rolePanels = root.querySelectorAll('[data-role-panel]');
     var pathwayDetails = root.querySelectorAll('.mmc-pathway-details');
+    var pathwaysOpen = Array.from(pathwayDetails).some(function (details) { return details.open; });
+
+    function setPathwaysOpen(nextOpen) {
+      pathwaysOpen = nextOpen;
+      pathwayDetails.forEach(function (details) {
+        var body = details.querySelector('.mmc-pathway-details__body');
+        if (!body || reducedMotion) {
+          details.open = nextOpen;
+          return;
+        }
+
+        window.clearTimeout(details._mmcDisclosureTimer);
+        if (nextOpen) {
+          details.open = true;
+          body.style.height = '0px';
+          body.style.opacity = '0';
+          body.style.transform = 'translateY(-4px)';
+          void body.offsetHeight;
+          window.requestAnimationFrame(function () {
+            if (!pathwaysOpen) return;
+            body.style.height = body.scrollHeight + 'px';
+            body.style.opacity = '1';
+            body.style.transform = 'translateY(0)';
+            details._mmcDisclosureTimer = window.setTimeout(function () {
+              if (pathwaysOpen) body.style.height = 'auto';
+            }, 270);
+          });
+        } else {
+          var startHeight = body.getBoundingClientRect().height;
+          body.style.height = startHeight + 'px';
+          body.style.opacity = '1';
+          body.style.transform = 'translateY(0)';
+          void body.offsetHeight;
+          window.requestAnimationFrame(function () {
+            if (pathwaysOpen) return;
+            body.style.height = '0px';
+            body.style.opacity = '0';
+            body.style.transform = 'translateY(-4px)';
+            details._mmcDisclosureTimer = window.setTimeout(function () {
+              if (!pathwaysOpen) {
+                details.open = false;
+                body.removeAttribute('style');
+              }
+            }, 230);
+          });
+        }
+      });
+    }
 
     /* The two comparison cards move as one so neither column jumps independently. */
     pathwayDetails.forEach(function (details) {
@@ -27,8 +75,7 @@
       if (!summary) return;
       summary.addEventListener('click', function (event) {
         event.preventDefault();
-        var nextOpen = !details.open;
-        pathwayDetails.forEach(function (item) { item.open = nextOpen; });
+        setPathwaysOpen(!pathwaysOpen);
       });
     });
 

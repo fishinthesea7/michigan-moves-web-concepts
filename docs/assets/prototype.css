@@ -1519,7 +1519,17 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 
 /* Real directory data: readable organization initials and multiple affiliations. */
 .mmc-directory--a.mmc-final-a .mmc-org-logo span { max-width:68px; padding:0 4px; text-align:center; line-height:1.15; overflow-wrap:anywhere; }
-.mmc-directory--a.mmc-final-a .mmc-org-logo img { background:#fff; }
+.mmc-directory--a.mmc-final-a .mmc-org-logo--has-image { background:#fff; }
+.mmc-directory--a.mmc-final-a .mmc-org-logo img {
+  inset:0;
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  padding:var(--mmc-logo-padding,8px);
+  border-radius:50%;
+  background:#fff;
+  object-fit:contain;
+}
 .mmc-directory--a.mmc-final-a .mmc-affiliations { margin:0; padding:2px 22px 8px; }
 .mmc-directory--a.mmc-final-a .mmc-affiliation { padding:12px 0; border-top:1px solid var(--mmc-border); }
 .mmc-directory--a.mmc-final-a .mmc-affiliation:first-child { padding-top:4px; border-top:0; }
@@ -1815,4 +1825,72 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
     background-size:cover;
     background-position:46% 35%;
   }
+}
+
+/* Connected directory prompt and anchored, animated role disclosures. */
+.mmc-involved--a.mmc-final-a .mmc-pathway-section { padding-bottom:0; }
+.mmc-involved--a.mmc-final-a .mmc-pathway-details { margin-top:0; }
+.mmc-involved--a.mmc-final-a .mmc-pathway-details__body {
+  display:block;
+  overflow:hidden;
+  padding:0;
+  transition:height .26s cubic-bezier(.16,1,.3,1),opacity .2s ease-out,transform .26s cubic-bezier(.16,1,.3,1);
+}
+.mmc-involved--a.mmc-final-a .mmc-pathway-details__content {
+  min-height:0;
+  overflow:hidden;
+  display:grid;
+  gap:24px;
+  padding:4px 0 8px;
+}
+.mmc-involved--a.mmc-final-a .mmc-follow-up-section {
+  margin-top:-1px;
+  padding:0 0 42px;
+  background:#fff;
+}
+.mmc-involved--a.mmc-final-a .mmc-follow-up-bar {
+  padding:30px 0 0;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  border-top:1px solid var(--mmc-border);
+  border-radius:0;
+  background:#fff;
+  box-shadow:none;
+}
+.mmc-involved--a.mmc-final-a .mmc-follow-up-bar__heading { grid-column:auto; padding:0; }
+.mmc-involved--a.mmc-final-a .mmc-follow-up-bar__heading p { max-width:62ch; }
+.mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn { grid-column:auto; min-width:250px; }
+
+/* Keep multi-organization profiles compact until the visitor asks for more. */
+.mmc-directory--a.mmc-final-a .mmc-directory-card { align-self:stretch; }
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more { border-top:1px solid var(--mmc-border); }
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more > summary {
+  min-height:42px;
+  padding:10px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--mmc-primary);
+  font-size:13px;
+  font-weight:800;
+  line-height:1.3;
+  list-style:none;
+  cursor:pointer;
+}
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more > summary::-webkit-details-marker { display:none; }
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more > summary span { font-size:22px; font-weight:500; transition:transform .2s ease; }
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more[open] > summary span { transform:rotate(45deg); }
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more__body {
+  display:grid;
+  grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows .26s cubic-bezier(.16,1,.3,1),opacity .2s ease-out;
+}
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more[open] .mmc-affiliations-more__body { grid-template-rows:1fr; opacity:1; }
+.mmc-directory--a.mmc-final-a .mmc-affiliations-more__content { min-height:0; overflow:hidden; }
+
+@media(max-width:800px) {
+  .mmc-involved--a.mmc-final-a .mmc-follow-up-bar { grid-template-columns:1fr; gap:20px; }
+  .mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn { width:100%; min-width:0; }
 }

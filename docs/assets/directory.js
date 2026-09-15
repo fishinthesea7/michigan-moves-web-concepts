@@ -27,6 +27,7 @@
   }
 
   function sectorTagMarkup(record) {
+    if (!record.sectors.length) return '';
     return '<div class="mmc-sector-tags" aria-label="Sectors">' + record.sectors.map(function (sector) {
       return '<span>' + escapeHtml(sector) + '</span>';
     }).join('') + '</div>';
@@ -36,15 +37,36 @@
     try { var url = new URL(value, document.baseURI); return /^https?:$/.test(url.protocol) ? url.href : ''; } catch (_) { return ''; }
   }
 
+  function organizationInitials(record) {
+    if (record.organizationInitials) return record.organizationInitials;
+    return record.organizationName.split(/[\s-]+/).filter(function (word) {
+      return word && !['and', 'of', 'the'].includes(word.toLowerCase());
+    }).map(function (word) { return word.charAt(0); }).join('').slice(0, 6);
+  }
+
   function organizationLogoMarkup(record) {
     var color = Array.from(record.organizationName).reduce(function (sum, char) { return sum + char.codePointAt(0); }, 0) % 3;
     var logo = record.organizationLogoUrl ? safeUrl(record.organizationLogoUrl) : '';
-    return '<div class="mmc-org-logo mmc-org-logo--' + color + '" aria-hidden="true"><span>Logo</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
+    return '<div class="mmc-org-logo mmc-org-logo--' + color + '" aria-hidden="true"><span>' + escapeHtml(organizationInitials(record)) + '</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
+  }
+
+  function websiteLinkMarkup(website, organizationName, extraClass) {
+    var url = website ? safeUrl(website) : '';
+    return url ? '<a class="mmc-profile-website mmc-card-website' + (extraClass ? ' ' + extraClass : '') + '" href="' + escapeHtml(url) + '" target="_blank" rel="noopener">' + escapeHtml(organizationName) + ' website <span aria-hidden="true">↗</span><span class="mmc-visually-hidden"> (opens in a new tab)</span></a>' : '';
+  }
+
+  function workMarkup(record) {
+    if (!Array.isArray(record.affiliations) || !record.affiliations.length) {
+      return '<p class="mmc-person-work"><strong>' + escapeHtml(record.representativeTitle) + '</strong><span>' + escapeHtml(record.organizationName) + '</span></p>';
+    }
+    return '<div class="mmc-affiliations" aria-label="Titles and organizations">' + record.affiliations.map(function (affiliation) {
+      return '<div class="mmc-affiliation"><p class="mmc-person-work"><strong>' + escapeHtml(affiliation.title) + '</strong><span>' + escapeHtml(affiliation.organizationName) + '</span></p>' + websiteLinkMarkup(affiliation.website, affiliation.organizationName, 'mmc-affiliation__website') + '</div>';
+    }).join('') + '</div>';
   }
 
   function websiteMarkup(record) {
-    var url = record.website ? safeUrl(record.website) : '';
-    return url ? '<a class="mmc-profile-website mmc-card-website" href="' + escapeHtml(url) + '" target="_blank" rel="noopener">Website <span aria-hidden="true">↗</span><span class="mmc-visually-hidden"> for ' + escapeHtml(record.organizationName) + ' (opens in a new tab)</span></a>' : '';
+    if (Array.isArray(record.affiliations) && record.affiliations.length) return '';
+    return websiteLinkMarkup(record.website, record.organizationName, '');
   }
 
   function cardMarkup(record) {
@@ -53,7 +75,7 @@
           organizationLogoMarkup(record) +
           '<div class="mmc-directory-card__heading"><h3>' + escapeHtml(record.representativeName) + '</h3><div class="mmc-badge-row">' + badgeMarkup(record) + '</div></div>' +
         '</div>' +
-        '<p class="mmc-person-work"><strong>' + escapeHtml(record.representativeTitle) + '</strong><span>' + escapeHtml(record.organizationName) + '</span></p>' +
+        workMarkup(record) +
         sectorTagMarkup(record) +
         websiteMarkup(record) +
       '</article>';
@@ -96,12 +118,18 @@
       return records.filter(function (record) {
         var haystack = [record.organizationName, record.representativeName, record.representativeTitle, record.primaryRole]
           .concat(record.sectors).join(' ').toLowerCase();
+        if (Array.isArray(record.affiliations)) {
+          haystack += ' ' + record.affiliations.map(function (affiliation) {
+            return affiliation.title + ' ' + affiliation.organizationName;
+          }).join(' ').toLowerCase();
+        }
         return (!query || haystack.includes(query)) &&
           (!state.roles.length || state.roles.includes(record.primaryRole)) &&
           (!state.sectors.length || state.sectors.some(function (sector) { return record.sectors.includes(sector); })) &&
           (!state.ceo || record.ceoPledgeSigner === true);
       }).sort(function (a, b) {
-        return a.representativeName.localeCompare(b.representativeName, undefined, { numeric: true });
+        var organizationOrder = a.organizationName.localeCompare(b.organizationName, undefined, { numeric: true });
+        return organizationOrder || a.representativeName.localeCompare(b.representativeName, undefined, { numeric: true });
       });
     }
 

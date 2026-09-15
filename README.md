@@ -190,9 +190,7 @@ The registration action opens the official form in a new tab and continues to us
 
 The final page uses the search-first card direction: the hero search control scrolls to and focuses the single working search field, followed by a live result count, primary-role quick filters, secondary refinements, and people-first profile cards. Each card includes a circular organization logo or organization-initials fallback, name, role, title, organization, sector, and organization website. The map remains removed because Michigan Moves is not introducing it yet.
 
-The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains nine unmistakable placeholder records; only the eight records with `directoryConsent: true` may enter search, totals, A-Z navigation, or rendering. CEO Pledge Signer is a boolean secondary credential and never a primary role or separate directory section.
-
-Change the temporary visible person label once in `window.MMC_DIRECTORY_CONFIG.representativeLabel` inside `docs/assets/directory-data.js`.
+The page uses `docs/assets/directory-data.js` and `docs/assets/directory.js`. The source array contains only board records with explicit public-directory consent and enough confirmed information to publish. The runtime repeats the `directoryConsent === true` privacy gate before records can enter search, totals, filters, or rendering. Optional `affiliations` keep multiple title, organization, and website combinations paired in source order. CEO Pledge Signer remains a boolean secondary credential and never a primary role or separate directory section.
 
 ## WordPress / Elementor handoff
 

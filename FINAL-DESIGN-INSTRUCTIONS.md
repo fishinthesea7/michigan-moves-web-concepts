@@ -120,5 +120,5 @@ The web copies are resized to approximately 2560 pixels wide and stored in `docs
 - Test all navigation, role selection, filtering, A–Z, resets, profile expansions, mobile menu, and feedback tools with mouse and keyboard.
 - Confirm there are no console errors, missing assets, broken relative paths, or horizontal overflow.
 - Confirm the live registration form and Contact links are correct.
-- Confirm the Directory uses only placeholder records, no consent-false record reaches any result or count, and CEO Pledge is never a primary role.
+- Confirm the Directory uses only explicitly consented public records, no consent-false record reaches any result or count, and CEO Pledge is never a primary role.
 - Read-only compare active Supabase comments before and after deployment. Do not alter feedback unless Mason explicitly requests it; resolved comments explicitly cleared for this revision remain recoverable through private history.

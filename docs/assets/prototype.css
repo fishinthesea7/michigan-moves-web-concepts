@@ -1517,6 +1517,22 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-involved--a.mmc-final-a .mmc-follow-up-bar__roles article + article { min-height:0; }
 }
 
+/* Real directory data: readable organization initials and multiple affiliations. */
+.mmc-directory--a.mmc-final-a .mmc-org-logo span { max-width:68px; padding:0 4px; text-align:center; line-height:1.15; overflow-wrap:anywhere; }
+.mmc-directory--a.mmc-final-a .mmc-org-logo img { background:#fff; }
+.mmc-directory--a.mmc-final-a .mmc-affiliations { margin:0; padding:2px 22px 8px; }
+.mmc-directory--a.mmc-final-a .mmc-affiliation { padding:12px 0; border-top:1px solid var(--mmc-border); }
+.mmc-directory--a.mmc-final-a .mmc-affiliation:first-child { padding-top:4px; border-top:0; }
+.mmc-directory--a.mmc-final-a .mmc-affiliation .mmc-person-work { padding:0; }
+.mmc-directory--a.mmc-final-a .mmc-affiliation__website {
+  width:auto;
+  min-height:36px;
+  margin:9px 0 0;
+  padding:7px 11px;
+  white-space:normal;
+  line-height:1.25;
+}
+
 /* Latest comments: aligned role details and a clearly separate follow-up chapter. */
 .mmc-involved--a.mmc-final-a .mmc-pathway-details { margin-top:auto; }
 .mmc-involved--a.mmc-final-a .mmc-follow-up-section {

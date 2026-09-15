@@ -21,6 +21,12 @@
     }).join('');
   }
 
+  function sectorSelectMarkup(values) {
+    return '<option value="">All sectors</option>' + values.map(function (value) {
+      return '<option value="' + escapeHtml(value) + '">' + escapeHtml(value) + '</option>';
+    }).join('');
+  }
+
   function badgeMarkup(record) {
     return '<span class="mmc-role-badge mmc-role-badge--' + slug(record.primaryRole) + '">' + escapeHtml(record.primaryRole) + '</span>' +
       (record.ceoPledgeSigner ? '<span class="mmc-credential-badge"><span aria-hidden="true">✓</span> CEO Pledge Signer</span>' : '');
@@ -120,6 +126,9 @@
     root.querySelectorAll('[data-directory-sector-options]').forEach(function (mount) {
       mount.innerHTML = sectorOptionMarkup(config.sectors);
     });
+    root.querySelectorAll('[data-directory-sector]').forEach(function (select) {
+      select.innerHTML = sectorSelectMarkup(config.sectors);
+    });
 
     function filteredRecords() {
       var query = state.query.trim().toLowerCase();
@@ -152,6 +161,9 @@
       });
       root.querySelectorAll('[data-directory-sector-option]').forEach(function (input) {
         input.checked = state.sectors.includes(input.value);
+      });
+      root.querySelectorAll('[data-directory-sector]').forEach(function (select) {
+        select.value = state.sectors.length === 1 ? state.sectors[0] : '';
       });
       root.querySelectorAll('[data-sector-summary]').forEach(function (summary) {
         if (!state.sectors.length) summary.textContent = 'All sectors';
@@ -225,6 +237,12 @@
         var index = state.sectors.indexOf(input.value);
         if (input.checked && index === -1) state.sectors.push(input.value);
         if (!input.checked && index !== -1) state.sectors.splice(index, 1);
+        render();
+      });
+    });
+    root.querySelectorAll('[data-directory-sector]').forEach(function (select) {
+      select.addEventListener('change', function () {
+        state.sectors = select.value ? [select.value] : [];
         render();
       });
     });

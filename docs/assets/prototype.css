@@ -1894,3 +1894,50 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   .mmc-involved--a.mmc-final-a .mmc-follow-up-bar { grid-template-columns:1fr; gap:20px; }
   .mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn { width:100%; min-width:0; }
 }
+
+/* Public-directory launch status and working native sector filter. */
+.mmc-directory--a.mmc-final-a .mmc-directory-status-banner {
+  border-block:1px solid #dfd4b5;
+  background:linear-gradient(105deg,#fff8e7 0%,#f7e8b9 100%);
+}
+.mmc-directory--a.mmc-final-a .mmc-directory-status-banner p {
+  min-height:82px;
+  margin:0;
+  padding:18px 0 18px 24px;
+  display:flex;
+  align-items:center;
+  border-left:6px solid var(--mmc-gold-strong);
+  color:var(--mmc-muted);
+  font-size:16px;
+  line-height:1.55;
+}
+.mmc-directory--a.mmc-final-a .mmc-directory-status-banner strong {
+  margin-right:.35em;
+  color:var(--mmc-deep);
+}
+.mmc-directory--a.mmc-final-a .mmc-directory-sector select {
+  width:100%;
+  min-height:48px;
+  padding:10px 36px 10px 13px;
+  border:1px solid #aebfc2;
+  border-radius:7px;
+  background-color:#fff;
+  color:var(--mmc-text);
+  font:inherit;
+  cursor:pointer;
+}
+.mmc-directory--a.mmc-final-a .mmc-directory-sector select:focus-visible {
+  outline:3px solid rgba(23,80,92,.2);
+  outline-offset:2px;
+  border-color:var(--mmc-primary);
+}
+
+@media(max-width:600px) {
+  .mmc-directory--a.mmc-final-a .mmc-directory-status-banner p {
+    min-height:0;
+    padding:18px 4px 18px 16px;
+    display:block;
+    font-size:15px;
+  }
+  .mmc-directory--a.mmc-final-a .mmc-directory-status-banner strong { display:block; margin:0 0 3px; }
+}

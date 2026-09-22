@@ -34,6 +34,12 @@ function assert(condition, message) {
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
           assert(directoryHeroStyle.size === '100% auto' && directoryHeroStyle.position === '50% 25%', 'Directory hero is not framed to show the full group');
+          const directoryHeroBalance = await page.locator('.mmc-final-hero').evaluate(element => {
+            const hero = element.getBoundingClientRect();
+            const content = element.querySelector('.mmc-hero__content').getBoundingClientRect();
+            return { top: content.top - hero.top, bottom: hero.bottom - content.bottom, width: content.width };
+          });
+          assert(Math.abs(directoryHeroBalance.top - directoryHeroBalance.bottom) <= 12 && directoryHeroBalance.width <= 600, `Directory hero content is not centered with a readable width: ${JSON.stringify(directoryHeroBalance)}`);
         }
         assert(await page.locator('[data-directory-jump]').innerText().then(text => text.trim().startsWith('Explore the coalition')), 'Directory hero action was not renamed');
         assert(await page.locator('.mmc-hero__quiet-link').count() === 0, 'Removed directory hero link remains');
@@ -61,6 +67,7 @@ function assert(condition, message) {
         assert(await page.locator('.mmc-directory-join-arrow').count() === 0, 'Directory invitation arrow circle remains');
         assert(await page.locator('.mmc-directory-join-kicker').count() === 0, 'Directory invitation kicker remains');
         assert(await page.locator('.mmc-directory-join-callout--final').evaluate(element => getComputedStyle(element, '::after').content === 'none'), 'Directory invitation decorative circle remains');
+        assert(await page.locator('.mmc-directory-join-callout--final').evaluate(element => getComputedStyle(element).borderTopColor === 'rgb(26, 43, 46)'), 'Directory invitation border color is incorrect');
         assert(await page.locator('[data-directory-role-button]').first().evaluate(element => getComputedStyle(element).backgroundColor === 'rgba(0, 0, 0, 0)'), 'Directory role filter is prefilled before selection');
         const websiteStyle = await page.locator('.mmc-card-website').first().evaluate(element => {
           const style = getComputedStyle(element);
@@ -125,6 +132,11 @@ function assert(condition, message) {
           return { height: Math.round(element.getBoundingClientRect().height), fontSize: parseFloat(style.fontSize) };
         });
         assert(followUpActionStyle.height >= 70 && followUpActionStyle.fontSize === 20, `Directory action is ${followUpActionStyle.height}px tall with ${followUpActionStyle.fontSize}px text`);
+        const followUpActionColors = await page.locator('.mmc-follow-up-bar > .mmc-btn').evaluate(element => {
+          const style = getComputedStyle(element);
+          return { background: style.backgroundColor, color: style.color };
+        });
+        assert(followUpActionColors.background === 'rgb(239, 215, 142)' && followUpActionColors.color === 'rgb(15, 56, 64)', `Directory action colors are incorrect: ${JSON.stringify(followUpActionColors)}`);
         assert(await page.locator('.mmc-shared-register').count() === 1, 'Expected one shared registration link');
         assert(await page.locator('.mmc-shared-register').getAttribute('href') === formUrl, 'Registration form URL is wrong');
         assert(await page.locator('.mmc-shared-register__arrow').count() === 0, 'Registration arrow circle remains');

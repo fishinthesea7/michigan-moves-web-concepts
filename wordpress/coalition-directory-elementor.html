@@ -2165,6 +2165,52 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   font-size:20px;
 }
 
+/* September 22 follow-up annotations: brand-gold action and roomier directory hero. */
+.mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn {
+  background:var(--mmc-gold);
+  color:var(--mmc-deep);
+}
+.mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn:hover {
+  background:var(--mmc-gold-strong);
+  color:var(--mmc-deep);
+}
+.mmc-directory--a.mmc-final-a .mmc-final-hero .mmc-hero__inner {
+  min-height:520px;
+  padding-top:56px;
+  padding-bottom:52px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.mmc-directory--a.mmc-final-a .mmc-final-hero__grid {
+  width:100%;
+}
+.mmc-directory--a.mmc-final-a .mmc-hero__content {
+  max-width:600px;
+}
+.mmc-directory--a.mmc-final-a .mmc-hero__content h1 {
+  margin-bottom:24px;
+  font-size:clamp(3rem,4.5vw,3.6rem);
+}
+.mmc-directory--a.mmc-final-a .mmc-hero__content .mmc-hero__lead {
+  max-width:560px;
+  margin-bottom:34px;
+  line-height:1.68;
+}
+.mmc-directory--a.mmc-final-a .mmc-directory-join-callout--final {
+  border-color:var(--mmc-text);
+}
+
+@media(max-width:800px) {
+  .mmc-directory--a.mmc-final-a .mmc-final-hero .mmc-hero__inner {
+    min-height:500px;
+    padding-block:48px;
+    justify-content:center;
+  }
+  .mmc-directory--a.mmc-final-a .mmc-hero__content h1 { margin-bottom:18px; }
+  .mmc-directory--a.mmc-final-a .mmc-hero__content .mmc-hero__lead { margin-bottom:26px; }
+}
+
 </style>
 <div class="mmc-standalone">
 <main id="main-content" class="mmc-page mmc-directory mmc-directory--a mmc-final-a" data-directory-mode="cards">

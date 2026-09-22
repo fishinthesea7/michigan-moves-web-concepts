@@ -2071,7 +2071,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 }
 
 .mmc-directory--a.mmc-final-a .mmc-final-hero {
-  min-height:520px;
+  min-height:494px;
 }
 .mmc-directory--a.mmc-final-a .mmc-final-hero .mmc-hero__inner {
   padding-top:58px;
@@ -2176,7 +2176,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   color:var(--mmc-deep);
 }
 .mmc-directory--a.mmc-final-a .mmc-final-hero .mmc-hero__inner {
-  min-height:520px;
+  min-height:494px;
   padding-top:56px;
   padding-bottom:52px;
   display:flex;
@@ -2185,13 +2185,16 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 }
 .mmc-directory--a.mmc-final-a .mmc-final-hero__grid {
   width:100%;
+  grid-template-columns:minmax(0,800px);
 }
 .mmc-directory--a.mmc-final-a .mmc-hero__content {
-  max-width:600px;
+  max-width:800px;
 }
 .mmc-directory--a.mmc-final-a .mmc-hero__content h1 {
+  width:800px;
+  max-width:100%;
   margin-bottom:24px;
-  font-size:clamp(3rem,4.5vw,3.6rem);
+  font-size:clamp(3.2rem,6vw,4.47rem);
 }
 .mmc-directory--a.mmc-final-a .mmc-hero__content .mmc-hero__lead {
   max-width:560px;
@@ -2200,6 +2203,12 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 }
 .mmc-directory--a.mmc-final-a .mmc-directory-join-callout--final {
   border-color:var(--mmc-text);
+}
+.mmc-directory--a.mmc-final-a .mmc-search-coalition {
+  height:64px;
+  min-height:64px;
+  padding:18px 26px;
+  font-weight:800;
 }
 
 @media(max-width:800px) {
@@ -2212,6 +2221,10 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
     padding-block:48px;
     justify-content:center;
   }
-  .mmc-directory--a.mmc-final-a .mmc-hero__content h1 { margin-bottom:18px; }
+  .mmc-directory--a.mmc-final-a .mmc-final-hero__grid { grid-template-columns:minmax(0,1fr); }
+  .mmc-directory--a.mmc-final-a .mmc-hero__content h1 {
+    margin-bottom:18px;
+    font-size:clamp(2.65rem,12vw,3.2rem);
+  }
   .mmc-directory--a.mmc-final-a .mmc-hero__content .mmc-hero__lead { margin-bottom:26px; }
 }

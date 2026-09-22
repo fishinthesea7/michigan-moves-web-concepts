@@ -7,7 +7,7 @@ const outputDirectory = resolve(root, 'wordpress');
 const assetBase = 'https://fishinthesea7.github.io/michigan-moves-web-concepts/assets';
 const directoryUrl = 'https://mimoves.org/coalition-directory/';
 const joiningUrl = 'https://mimoves.org/join-the-movement/';
-const packageVersion = '2026-09-22.5';
+const packageVersion = '2026-09-22.6';
 
 const css = (await readFile(resolve(root, 'docs/assets/prototype.css'), 'utf8'))
   .replaceAll('./images/', `${assetBase}/images/`);
@@ -75,7 +75,8 @@ const directoryPage = await buildDirectoryPage();
 await Promise.all([
   writeFile(resolve(outputDirectory, 'joining-page-elementor.html'), joiningPage),
   writeFile(resolve(outputDirectory, `joining-page-elementor-v${packageVersion.replaceAll('.', '-')}.txt`), joiningPage),
-  writeFile(resolve(outputDirectory, 'coalition-directory-elementor.html'), directoryPage)
+  writeFile(resolve(outputDirectory, 'coalition-directory-elementor.html'), directoryPage),
+  writeFile(resolve(outputDirectory, `coalition-directory-elementor-v${packageVersion.replaceAll('.', '-')}.txt`), directoryPage)
 ]);
 
 console.log('Built WordPress Elementor handoff files in wordpress/.');

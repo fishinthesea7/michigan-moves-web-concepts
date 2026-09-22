@@ -28,7 +28,7 @@ function assert(condition, message) {
         assert((await page.locator('.mmc-final-hero').evaluate(element => getComputedStyle(element).backgroundImage)).includes('directory-group-hiking.jpg'), 'Approved Directory background image is not active');
         if (width === 1440) {
           const directoryHeroHeight = await page.locator('.mmc-final-hero').evaluate(element => Math.round(element.getBoundingClientRect().height));
-          assert(directoryHeroHeight >= 500, `Directory hero is not tall enough to show the map: ${directoryHeroHeight}px`);
+          assert(directoryHeroHeight === 494, `Directory hero is not the annotated 494px height: ${directoryHeroHeight}px`);
           const directoryHeroStyle = await page.locator('.mmc-final-hero').evaluate(element => {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
@@ -39,7 +39,9 @@ function assert(condition, message) {
             const content = element.querySelector('.mmc-hero__content').getBoundingClientRect();
             return { top: content.top - hero.top, bottom: hero.bottom - content.bottom, width: content.width };
           });
-          assert(Math.abs(directoryHeroBalance.top - directoryHeroBalance.bottom) <= 12 && directoryHeroBalance.width <= 600, `Directory hero content is not centered with a readable width: ${JSON.stringify(directoryHeroBalance)}`);
+          assert(Math.abs(directoryHeroBalance.top - directoryHeroBalance.bottom) <= 12 && directoryHeroBalance.width === 800, `Directory hero content is not centered at the annotated width: ${JSON.stringify(directoryHeroBalance)}`);
+          const directoryTitleStyle = await page.locator('#directory-a-title').evaluate(element => ({ fontSize: parseFloat(getComputedStyle(element).fontSize), width: element.getBoundingClientRect().width }));
+          assert(Math.abs(directoryTitleStyle.fontSize - 71.52) < .1 && directoryTitleStyle.width === 800, `Directory title dimensions are incorrect: ${JSON.stringify(directoryTitleStyle)}`);
         }
         assert(await page.locator('[data-directory-jump]').innerText().then(text => text.trim().startsWith('Explore the coalition')), 'Directory hero action was not renamed');
         assert(await page.locator('.mmc-hero__quiet-link').count() === 0, 'Removed directory hero link remains');
@@ -86,7 +88,12 @@ function assert(condition, message) {
           assert(beforeHover && afterHover && afterHover.y < beforeHover.y, 'Directory card does not lift on hover');
         }
         const searchBox = await page.locator('.mmc-search-coalition').boundingBox();
-        assert(searchBox && searchBox.height <= 54 && searchBox.width >= 300, `Search button dimensions are wrong: ${JSON.stringify(searchBox)}`);
+        assert(searchBox && Math.round(searchBox.height) === 64 && searchBox.width >= 300, `Search button dimensions are wrong: ${JSON.stringify(searchBox)}`);
+        const searchButtonStyle = await page.locator('.mmc-search-coalition').evaluate(element => {
+          const style = getComputedStyle(element);
+          return { weight: style.fontWeight, padding: style.padding };
+        });
+        assert(searchButtonStyle.weight === '800' && searchButtonStyle.padding === '18px 26px', `Search button typography or padding is wrong: ${JSON.stringify(searchButtonStyle)}`);
 
         await page.locator('[data-directory-jump]').click();
         await page.waitForTimeout(400);

@@ -28,12 +28,21 @@ function assert(condition, message) {
         assert((await page.locator('.mmc-final-hero').evaluate(element => getComputedStyle(element).backgroundImage)).includes('directory-group-hiking.jpg'), 'Approved Directory background image is not active');
         if (width === 1440) {
           const directoryHeroHeight = await page.locator('.mmc-final-hero').evaluate(element => Math.round(element.getBoundingClientRect().height));
-          assert(directoryHeroHeight <= 400, `Directory hero is still too tall: ${directoryHeroHeight}px`);
+          assert(directoryHeroHeight >= 500, `Directory hero is not tall enough to show the map: ${directoryHeroHeight}px`);
           const directoryHeroStyle = await page.locator('.mmc-final-hero').evaluate(element => {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
           assert(directoryHeroStyle.size === '100% auto' && directoryHeroStyle.position === '50% 25%', 'Directory hero is not framed to show the full group');
+        }
+        assert(await page.locator('[data-directory-jump]').innerText().then(text => text.trim().startsWith('Explore the coalition')), 'Directory hero action was not renamed');
+        assert(await page.locator('.mmc-hero__quiet-link').count() === 0, 'Removed directory hero link remains');
+        assert(await page.locator('[data-directory-status-dismiss]').count() === 1, 'Directory notice dismiss control is missing');
+        if (width === 1440) {
+          await page.locator('[data-directory-status-dismiss]').click();
+          await page.waitForTimeout(700);
+          assert(await page.locator('.mmc-directory-status-banner').evaluate(element => element.classList.contains('is-dismissed')), 'Directory notice did not dismiss');
+          assert(await page.locator('.mmc-directory-status-banner').evaluate(element => Math.round(element.getBoundingClientRect().height) === 0), 'Dismissed directory notice still reserves page space');
         }
         assert(await page.locator('.mmc-org-logo').count() === 23, 'Organization logos or profile rendering failed');
         assert(await page.locator('.mmc-org-logo--initials').count() > 0, 'Organization-initial fallbacks are missing');
@@ -96,8 +105,13 @@ function assert(condition, message) {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
-          assert(heroImageStyle.size === '135% auto' && heroImageStyle.position === '0% 27%', 'Get Involved hero is not balanced across faces and movement');
+          assert(heroImageStyle.size === '112% auto' && heroImageStyle.position === '0% 27%', 'Get Involved hero is not balanced across faces and movement');
         }
+        assert(await page.locator('.mmc-hero__lead').innerText() === 'Join our network of people and organizations across Michigan and amplify your impact, for free.', 'Joining hero sentence is incorrect');
+        assert(await page.locator('.mmc-hero__actions .mmc-btn').first().innerText().then(text => text.trim().startsWith('Get involved')), 'Primary hero action is incorrect');
+        assert(await page.locator('.mmc-hero__actions .mmc-btn').last().innerText().then(text => text.trim().startsWith('Meet the community')), 'Community hero action is incorrect');
+        assert(await page.locator('#roles-a-heading').innerText() === 'Two meaningful ways to take action', 'Role section heading is incorrect');
+        assert(await page.locator('.mmc-chapter-heading p').innerText().then(text => text.includes('the statewide movement')), 'Role section copy was not updated');
         assert(await page.locator('.mmc-proof-strip p').nth(2).locator('span').innerText() === 'Sectors aligned', 'Sector statistic text was not shortened');
         assert(parseFloat(await page.locator('.mmc-proof-strip span').first().evaluate(element => getComputedStyle(element).fontSize)) >= 17, 'Statistic text is still too small');
         assert(await page.locator('.mmc-follow-up-bar__heading p').innerText() === 'The Coalition Directory introduces the people and organizations working together to make Michigan more active.', 'Directory explanation is missing');
@@ -108,15 +122,18 @@ function assert(condition, message) {
         assert(await page.getByText('Ready to get involved?').count() === 0, 'Registration helper label remains');
         const registerStyle = await page.locator('.mmc-shared-register').evaluate(element => {
           const style = getComputedStyle(element);
-          return { shadow: style.boxShadow, fontSize: parseFloat(getComputedStyle(element.querySelector('strong')).fontSize) };
+          return { border: style.borderTopWidth, shadow: style.boxShadow, fontSize: parseFloat(getComputedStyle(element.querySelector('strong')).fontSize), fontWeight: getComputedStyle(element.querySelector('strong')).fontWeight };
         });
-        assert(registerStyle.shadow !== 'none' && registerStyle.fontSize >= 21, 'Primary registration action is not visually emphasized');
+        assert(registerStyle.border === '0px' && registerStyle.shadow !== 'none' && registerStyle.fontSize >= 21 && registerStyle.fontWeight === '800', 'Primary registration action styling is incorrect');
         const heroHeights = await page.locator('.mmc-hero__actions .mmc-btn').evaluateAll(links => links.map(link => Math.round(link.getBoundingClientRect().height)));
         assert(heroHeights.length === 2 && heroHeights[0] === heroHeights[1], `Hero buttons are not equal height: ${heroHeights.join(', ')}`);
         const pathwayDetails = page.locator('.mmc-pathway-details');
         assert(await pathwayDetails.count() === 2, 'Expected two role-card expanders');
         await pathwayDetails.first().locator('summary').click();
         assert(await pathwayDetails.evaluateAll(items => items.every(item => item.open)), 'Role cards did not expand together');
+        await page.waitForTimeout(300);
+        const expandedBodyHeights = await page.locator('.mmc-pathway-details__body').evaluateAll(elements => elements.map(element => Math.round(element.getBoundingClientRect().height)));
+        assert(expandedBodyHeights.length === 2 && expandedBodyHeights[0] === expandedBodyHeights[1], `Expanded role content is not top-aligned with whitespace below the shorter card: ${expandedBodyHeights.join(', ')}`);
         await pathwayDetails.nth(1).locator('summary').click();
         assert(await pathwayDetails.evaluateAll(items => items.every(item => !item.open)), 'Role cards did not collapse together');
         if (width === 1440) {

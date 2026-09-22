@@ -22,32 +22,58 @@
     var pathwayDetails = root.querySelectorAll('.mmc-pathway-details');
     var pathwaysOpen = Array.from(pathwayDetails).some(function (details) { return details.open; });
 
+    function pathwayBodies() {
+      return Array.from(pathwayDetails).map(function (details) {
+        return details.querySelector('.mmc-pathway-details__body');
+      }).filter(Boolean);
+    }
+
+    function equalizedExpandedHeight() {
+      return pathwayBodies().reduce(function (height, body) {
+        return Math.max(height, body.scrollHeight);
+      }, 0);
+    }
+
     function setPathwaysOpen(nextOpen) {
       pathwaysOpen = nextOpen;
-      pathwayDetails.forEach(function (details) {
-        var body = details.querySelector('.mmc-pathway-details__body');
-        if (!body || reducedMotion) {
-          details.open = nextOpen;
-          return;
-        }
+      var bodies = pathwayBodies();
+      pathwayDetails.forEach(function (details) { window.clearTimeout(details._mmcDisclosureTimer); });
 
-        window.clearTimeout(details._mmcDisclosureTimer);
-        if (nextOpen) {
+      if (nextOpen) {
+        pathwayDetails.forEach(function (details) {
+          var body = details.querySelector('.mmc-pathway-details__body');
           details.open = true;
+          if (!body) return;
           body.style.height = '0px';
           body.style.opacity = '0';
           body.style.transform = 'translateY(-4px)';
-          void body.offsetHeight;
-          window.requestAnimationFrame(function () {
-            if (!pathwaysOpen) return;
-            body.style.height = body.scrollHeight + 'px';
+        });
+        var expand = function () {
+          if (!pathwaysOpen) return;
+          var targetHeight = equalizedExpandedHeight();
+          bodies.forEach(function (body) {
+            body.style.height = targetHeight + 'px';
             body.style.opacity = '1';
             body.style.transform = 'translateY(0)';
-            details._mmcDisclosureTimer = window.setTimeout(function () {
-              if (pathwaysOpen) body.style.height = 'auto';
-            }, 270);
           });
-        } else {
+        };
+        if (reducedMotion) expand();
+        else {
+          if (bodies[0]) void bodies[0].offsetHeight;
+          window.requestAnimationFrame(expand);
+        }
+      } else {
+        pathwayDetails.forEach(function (details) {
+          var body = details.querySelector('.mmc-pathway-details__body');
+          if (!body) {
+            details.open = false;
+            return;
+          }
+          if (reducedMotion) {
+            details.open = false;
+            body.removeAttribute('style');
+            return;
+          }
           var startHeight = body.getBoundingClientRect().height;
           body.style.height = startHeight + 'px';
           body.style.opacity = '1';
@@ -65,9 +91,17 @@
               }
             }, 230);
           });
-        }
-      });
+        });
+      }
     }
+
+    window.addEventListener('resize', function () {
+      if (!pathwaysOpen) return;
+      var bodies = pathwayBodies();
+      bodies.forEach(function (body) { body.style.height = 'auto'; });
+      var targetHeight = equalizedExpandedHeight();
+      bodies.forEach(function (body) { body.style.height = targetHeight + 'px'; });
+    });
 
     /* The two comparison cards move as one so neither column jumps independently. */
     pathwayDetails.forEach(function (details) {

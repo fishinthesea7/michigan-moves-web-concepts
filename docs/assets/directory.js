@@ -104,6 +104,32 @@
     var resultsMount = root.querySelector('[data-directory-results]');
     var countMount = root.querySelector('[data-result-count]');
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var statusBanner = root.querySelector('.mmc-directory-status-banner');
+    var statusTimer;
+
+    function dismissStatusBanner() {
+      if (!statusBanner || statusBanner.classList.contains('is-dismissed')) return;
+      window.clearTimeout(statusTimer);
+      statusBanner.classList.remove('is-entering', 'is-visible');
+      statusBanner.classList.add('is-leaving');
+      window.setTimeout(function () {
+        statusBanner.classList.remove('is-leaving');
+        statusBanner.classList.add('is-dismissed');
+      }, reducedMotion ? 0 : 650);
+    }
+
+    if (statusBanner) {
+      statusBanner.classList.add('is-entering');
+      var dismissButton = statusBanner.querySelector('[data-directory-status-dismiss]');
+      if (dismissButton) dismissButton.addEventListener('click', dismissStatusBanner);
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          statusBanner.classList.remove('is-entering');
+          statusBanner.classList.add('is-visible');
+          statusTimer = window.setTimeout(dismissStatusBanner, 10000);
+        });
+      });
+    }
 
     root.querySelectorAll('[data-directory-jump]').forEach(function (button) {
       button.addEventListener('click', function () {

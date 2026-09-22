@@ -138,6 +138,7 @@ function assert(condition, message) {
         });
         assert(followUpActionColors.background === 'rgb(239, 215, 142)' && followUpActionColors.color === 'rgb(15, 56, 64)', `Directory action colors are incorrect: ${JSON.stringify(followUpActionColors)}`);
         assert(await page.locator('.mmc-follow-up-directory-link').getAttribute('style') === 'background:#efd78e!important;color:#0f3840!important;border-radius:12px!important', 'WordPress-safe inline directory action styles are missing');
+        assert(!(await page.locator('.mmc-follow-up-directory-link').evaluate(element => element.classList.contains('mmc-btn--teal'))), 'Directory action still inherits the teal button treatment');
         assert(await page.locator('.mmc-shared-register').count() === 1, 'Expected one shared registration link');
         assert(await page.locator('.mmc-shared-register').getAttribute('href') === formUrl, 'Registration form URL is wrong');
         assert(await page.locator('.mmc-shared-register__arrow').count() === 0, 'Registration arrow circle remains');

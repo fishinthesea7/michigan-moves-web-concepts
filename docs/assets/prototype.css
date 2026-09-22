@@ -228,6 +228,15 @@ body.mmc-standalone {
   transition: transform .16s ease, background .16s ease, color .16s ease, border-color .16s ease;
 }
 .mmc-btn:hover { transform: translateY(-2px); background: var(--mmc-gold-strong); }
+.mmc-page a.mmc-follow-up-directory-link {
+  border-radius:12px!important;
+  background:var(--mmc-gold)!important;
+  color:var(--mmc-deep)!important;
+}
+.mmc-page a.mmc-follow-up-directory-link:hover {
+  background:var(--mmc-gold-strong)!important;
+  color:var(--mmc-deep)!important;
+}
 .mmc-btn--teal { background: var(--mmc-primary); color: #fff; }
 .mmc-btn--teal:hover { background: var(--mmc-deep); }
 .mmc-btn--outline { border-color: currentColor; background: transparent; color: #fff; }
@@ -2161,11 +2170,6 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   background:var(--mmc-gold);
   color:var(--mmc-deep);
   border-radius:12px;
-}
-.mmc-involved--a.mmc-final-a .mmc-follow-up-directory-link {
-  background:#efd78e!important;
-  color:#0f3840!important;
-  border-radius:12px!important;
 }
 .mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn:hover {
   background:var(--mmc-gold-strong);

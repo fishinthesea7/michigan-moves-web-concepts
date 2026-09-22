@@ -7,7 +7,7 @@ const outputDirectory = resolve(root, 'wordpress');
 const assetBase = 'https://fishinthesea7.github.io/michigan-moves-web-concepts/assets';
 const directoryUrl = 'https://mimoves.org/coalition-directory/';
 const joiningUrl = 'https://mimoves.org/join-the-movement/';
-const packageVersion = '2026-09-22.4';
+const packageVersion = '2026-09-22.5';
 
 const css = (await readFile(resolve(root, 'docs/assets/prototype.css'), 'utf8'))
   .replaceAll('./images/', `${assetBase}/images/`);
@@ -29,7 +29,7 @@ function wrap({ title, instructions, markup, scripts }) {
   return `<!--
   ${title}
   MIMOVES WORDPRESS PACKAGE VERSION: ${packageVersion}
-  Paste this entire file into one Elementor HTML widget on a full-width page.
+  Paste this entire file into the WordPress page Code Editor or one Elementor HTML widget on a full-width page.
   ${instructions}
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,9 +70,12 @@ async function buildDirectoryPage() {
 }
 
 await mkdir(outputDirectory, { recursive: true });
+const joiningPage = await buildJoiningPage();
+const directoryPage = await buildDirectoryPage();
 await Promise.all([
-  writeFile(resolve(outputDirectory, 'joining-page-elementor.html'), await buildJoiningPage()),
-  writeFile(resolve(outputDirectory, 'coalition-directory-elementor.html'), await buildDirectoryPage())
+  writeFile(resolve(outputDirectory, 'joining-page-elementor.html'), joiningPage),
+  writeFile(resolve(outputDirectory, `joining-page-elementor-v${packageVersion.replaceAll('.', '-')}.txt`), joiningPage),
+  writeFile(resolve(outputDirectory, 'coalition-directory-elementor.html'), directoryPage)
 ]);
 
 console.log('Built WordPress Elementor handoff files in wordpress/.');

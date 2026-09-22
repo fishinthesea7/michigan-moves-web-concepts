@@ -1947,7 +1947,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   background-image:var(--mmc-hero-image);
 }
 .mmc-involved--a.mmc-final-a .mmc-final-hero {
-  background-size:var(--mmc-hero-size-desktop,112% auto);
+  background-size:var(--mmc-hero-size-desktop,135% auto);
   background-position:var(--mmc-hero-position-desktop,left 27%);
 }
 .mmc-directory--a.mmc-final-a .mmc-final-hero {
@@ -2160,6 +2160,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 .mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn {
   background:var(--mmc-gold);
   color:var(--mmc-deep);
+  border-radius:12px;
 }
 .mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn:hover {
   background:var(--mmc-gold-strong);
@@ -2193,6 +2194,10 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
 }
 
 @media(max-width:800px) {
+  .mmc-involved--a.mmc-final-a .mmc-final-hero {
+    background-size:var(--mmc-hero-size-mobile,cover);
+    background-position:var(--mmc-hero-position-mobile,center);
+  }
   .mmc-directory--a.mmc-final-a .mmc-final-hero .mmc-hero__inner {
     min-height:500px;
     padding-block:48px;

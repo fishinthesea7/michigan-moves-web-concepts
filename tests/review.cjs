@@ -112,7 +112,7 @@ function assert(condition, message) {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
-          assert(heroImageStyle.size === '112% auto' && heroImageStyle.position === '0% 27%', 'Get Involved hero is not balanced across faces and movement');
+          assert(heroImageStyle.size === '135% auto' && heroImageStyle.position === '0% 27%', 'Get Involved hero is not positioned with the woman in red near the right edge');
         }
         assert(await page.locator('.mmc-hero__lead').innerText() === 'Join our network of people and organizations across Michigan and amplify your impact, for free.', 'Joining hero sentence is incorrect');
         assert(await page.locator('.mmc-hero__actions .mmc-btn').first().innerText().then(text => text.trim().startsWith('Get involved')), 'Primary hero action is incorrect');
@@ -129,9 +129,9 @@ function assert(condition, message) {
         assert(await page.locator('.mmc-follow-up-bar__roles').count() === 0, 'Removed Ambassador and Member follow-up blocks remain');
         const followUpActionStyle = await page.locator('.mmc-follow-up-bar > .mmc-btn').evaluate(element => {
           const style = getComputedStyle(element);
-          return { height: Math.round(element.getBoundingClientRect().height), fontSize: parseFloat(style.fontSize) };
+          return { height: Math.round(element.getBoundingClientRect().height), fontSize: parseFloat(style.fontSize), borderRadius: style.borderRadius };
         });
-        assert(followUpActionStyle.height >= 70 && followUpActionStyle.fontSize === 20, `Directory action is ${followUpActionStyle.height}px tall with ${followUpActionStyle.fontSize}px text`);
+        assert(followUpActionStyle.height >= 70 && followUpActionStyle.fontSize === 20 && followUpActionStyle.borderRadius === '12px', `Directory action styling is incorrect: ${JSON.stringify(followUpActionStyle)}`);
         const followUpActionColors = await page.locator('.mmc-follow-up-bar > .mmc-btn').evaluate(element => {
           const style = getComputedStyle(element);
           return { background: style.backgroundColor, color: style.color };

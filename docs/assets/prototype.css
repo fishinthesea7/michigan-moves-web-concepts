@@ -2162,6 +2162,11 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   color:var(--mmc-deep);
   border-radius:12px;
 }
+.mmc-involved--a.mmc-final-a .mmc-follow-up-directory-link {
+  background:#efd78e!important;
+  color:#0f3840!important;
+  border-radius:12px!important;
+}
 .mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn:hover {
   background:var(--mmc-gold-strong);
   color:var(--mmc-deep);

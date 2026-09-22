@@ -7,6 +7,7 @@ const outputDirectory = resolve(root, 'wordpress');
 const assetBase = 'https://fishinthesea7.github.io/michigan-moves-web-concepts/assets';
 const directoryUrl = 'https://mimoves.org/coalition-directory/';
 const joiningUrl = 'https://mimoves.org/join-the-movement/';
+const packageVersion = '2026-09-22.4';
 
 const css = (await readFile(resolve(root, 'docs/assets/prototype.css'), 'utf8'))
   .replaceAll('./images/', `${assetBase}/images/`);
@@ -27,6 +28,7 @@ function replaceSharedUrls(markup) {
 function wrap({ title, instructions, markup, scripts }) {
   return `<!--
   ${title}
+  MIMOVES WORDPRESS PACKAGE VERSION: ${packageVersion}
   Paste this entire file into one Elementor HTML widget on a full-width page.
   ${instructions}
 -->

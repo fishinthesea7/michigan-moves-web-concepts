@@ -1,5 +1,6 @@
 <!--
   Michigan Moves Coalition — Joining page
+  MIMOVES WORDPRESS PACKAGE VERSION: 2026-09-22.4
   Paste this entire file into one Elementor HTML widget on a full-width page.
   The hero currently uses the published prototype image. After uploading it to WordPress, replace only the URL inside --mmc-hero-image. The directory links assume the WordPress permalink https://mimoves.org/coalition-directory/
 -->
@@ -2171,6 +2172,11 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
   color:var(--mmc-deep);
   border-radius:12px;
 }
+.mmc-involved--a.mmc-final-a .mmc-follow-up-directory-link {
+  background:#efd78e!important;
+  color:#0f3840!important;
+  border-radius:12px!important;
+}
 .mmc-involved--a.mmc-final-a .mmc-follow-up-bar > .mmc-btn:hover {
   background:var(--mmc-gold-strong);
   color:var(--mmc-deep);
@@ -2296,7 +2302,7 @@ html:not(.mmc-js) .mmc-involved--b .mmc-tab-panel { grid-column: 1; }
       <div class="mmc-container">
         <div class="mmc-follow-up-bar">
           <div class="mmc-follow-up-bar__heading"><h2 id="next-a-heading">We’ll help you get connected</h2><p>The Coalition Directory introduces the people and organizations working together to make Michigan more active.</p></div>
-          <a class="mmc-btn mmc-btn--teal" href="https://mimoves.org/coalition-directory/">Explore the Coalition Directory <span aria-hidden="true">→</span></a>
+          <a class="mmc-btn mmc-btn--teal mmc-follow-up-directory-link" href="https://mimoves.org/coalition-directory/" style="background:#efd78e!important;color:#0f3840!important;border-radius:12px!important">Explore the Coalition Directory <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>

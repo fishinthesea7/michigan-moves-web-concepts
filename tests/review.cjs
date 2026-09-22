@@ -113,9 +113,18 @@ function assert(condition, message) {
         assert(await page.locator('#roles-a-heading').innerText() === 'Two meaningful ways to take action', 'Role section heading is incorrect');
         assert(await page.locator('.mmc-chapter-heading p').innerText().then(text => text.includes('the statewide movement')), 'Role section copy was not updated');
         assert(await page.locator('.mmc-proof-strip p').nth(2).locator('span').innerText() === 'Sectors aligned', 'Sector statistic text was not shortened');
-        assert(parseFloat(await page.locator('.mmc-proof-strip span').first().evaluate(element => getComputedStyle(element).fontSize)) >= 17, 'Statistic text is still too small');
+        const secondaryHeroFontSize = parseFloat(await page.locator('.mmc-btn--hero-secondary').evaluate(element => getComputedStyle(element).fontSize));
+        assert(secondaryHeroFontSize === 19, `Secondary hero action font is ${secondaryHeroFontSize}px instead of 19px`);
+        const proofLabelFontSizes = await page.locator('.mmc-proof-strip span').evaluateAll(elements => elements.map(element => parseFloat(getComputedStyle(element).fontSize)));
+        const expectedProofLabelMinimum = width === 1440 ? 24 : 19;
+        assert(proofLabelFontSizes.every(size => size >= expectedProofLabelMinimum), `Statistic labels are too small: ${proofLabelFontSizes.join(', ')}`);
         assert(await page.locator('.mmc-follow-up-bar__heading p').innerText() === 'The Coalition Directory introduces the people and organizations working together to make Michigan more active.', 'Directory explanation is missing');
         assert(await page.locator('.mmc-follow-up-bar__roles').count() === 0, 'Removed Ambassador and Member follow-up blocks remain');
+        const followUpActionStyle = await page.locator('.mmc-follow-up-bar > .mmc-btn').evaluate(element => {
+          const style = getComputedStyle(element);
+          return { height: Math.round(element.getBoundingClientRect().height), fontSize: parseFloat(style.fontSize) };
+        });
+        assert(followUpActionStyle.height >= 70 && followUpActionStyle.fontSize === 20, `Directory action is ${followUpActionStyle.height}px tall with ${followUpActionStyle.fontSize}px text`);
         assert(await page.locator('.mmc-shared-register').count() === 1, 'Expected one shared registration link');
         assert(await page.locator('.mmc-shared-register').getAttribute('href') === formUrl, 'Registration form URL is wrong');
         assert(await page.locator('.mmc-shared-register__arrow').count() === 0, 'Registration arrow circle remains');

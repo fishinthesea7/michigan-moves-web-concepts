@@ -8,7 +8,8 @@ const assetBase = 'https://fishinthesea7.github.io/michigan-moves-web-concepts/a
 const directoryUrl = 'https://mimoves.org/coalition-directory/';
 const joiningUrl = 'https://mimoves.org/join-the-movement/';
 
-const css = await readFile(resolve(root, 'docs/assets/prototype.css'), 'utf8');
+const css = (await readFile(resolve(root, 'docs/assets/prototype.css'), 'utf8'))
+  .replaceAll('./images/', `${assetBase}/images/`);
 
 function extractPageBody(html) {
   const match = html.match(/<!-- BEGIN WORDPRESS \/ ELEMENTOR PAGE-BODY BLOCK -->\s*([\s\S]*?)\s*<!-- END WORDPRESS \/ ELEMENTOR PAGE-BODY BLOCK -->/);

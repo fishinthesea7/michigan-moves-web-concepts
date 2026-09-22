@@ -1,7 +1,12 @@
 /*
- * Public directory records reviewed against the Coalition database on 2026-09-15.
+ * Public directory records reviewed against the Coalition database on 2026-09-21.
  * Every visible record has explicit public-directory consent. Records with
  * incomplete or unclear membership information remain unpublished.
+ *
+ * WORDPRESS LOGOS: Paste the full HTTPS URL from the WordPress Media Library
+ * into organizationLogoUrl for any card. Leave it as '' to show the
+ * organizationInitials automatically. Use organizationLogoPadding (0-20) only
+ * when an unusually tight or wide logo needs manual breathing room.
  */
 window.MMC_DIRECTORY_CONFIG = {
   representativeLabel: 'Representative',
@@ -18,6 +23,11 @@ window.MMC_DIRECTORY_CONFIG = {
 };
 
 window.MMC_DIRECTORY_RECORDS = [
+  {
+    organizationName: 'Adrian College Health and Physical Education', organizationInitials: 'ACHPE', organizationLogoUrl: '', representativeName: 'Kate Steele', representativeTitle: 'Assistant Professor',
+    primaryRole: 'Coalition Ambassador', sectors: ['Education'],
+    website: 'https://www.adrian.edu/', directoryConsent: true, ceoPledgeSigner: false
+  },
   {
     organizationName: 'American Heart Association', organizationInitials: 'AHA', organizationLogoUrl: '', representativeName: 'Sarah Rood', representativeTitle: 'Marketing and Communications Director',
     primaryRole: 'Coalition Member', sectors: ['Media & Communications'],
@@ -91,6 +101,11 @@ window.MMC_DIRECTORY_RECORDS = [
   },
   {
     organizationName: 'Michigan State University', organizationInitials: 'MSU', organizationLogoUrl: '', representativeName: 'Brittany Jurek', representativeTitle: 'Fitness & Wellness Programs Assistant',
+    primaryRole: 'Coalition Member', sectors: ['Business & Industry'],
+    website: 'https://msu.edu/', directoryConsent: true, ceoPledgeSigner: false
+  },
+  {
+    organizationName: 'Michigan State University', organizationInitials: 'MSU', organizationLogoUrl: '', representativeName: 'Angela Maniaci', representativeTitle: 'Fitness and Wellbeing Coordinator',
     primaryRole: 'Coalition Member', sectors: ['Business & Industry'],
     website: 'https://msu.edu/', directoryConsent: true, ceoPledgeSigner: false
   },

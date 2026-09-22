@@ -51,11 +51,10 @@
   }
 
   function organizationLogoMarkup(record) {
-    var color = Array.from(record.organizationName).reduce(function (sum, char) { return sum + char.codePointAt(0); }, 0) % 3;
     var logo = record.organizationLogoUrl ? safeUrl(record.organizationLogoUrl) : '';
     var requestedPadding = Number(record.organizationLogoPadding);
     var logoPadding = Number.isFinite(requestedPadding) && requestedPadding >= 0 && requestedPadding <= 20 ? requestedPadding : 8;
-    return '<div class="mmc-org-logo mmc-org-logo--' + color + (logo ? ' mmc-org-logo--has-image' : '') + '" style="--mmc-logo-padding:' + logoPadding + 'px" aria-hidden="true"><span>' + escapeHtml(organizationInitials(record)) + '</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
+    return '<div class="mmc-org-logo ' + (logo ? 'mmc-org-logo--has-image' : 'mmc-org-logo--initials') + '" style="--mmc-logo-padding:' + logoPadding + 'px" aria-hidden="true"><span>' + escapeHtml(organizationInitials(record)) + '</span>' + (logo ? '<img src="' + escapeHtml(logo) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>';
   }
 
   function websiteLinkMarkup(website, organizationName, extraClass) {
@@ -183,8 +182,16 @@
 
     function attachResultEvents() {
       resultsMount.querySelectorAll('.mmc-org-logo img').forEach(function (image) {
-        image.addEventListener('error', function () { image.remove(); });
-        if (image.complete && !image.naturalWidth) image.remove();
+        function showInitials() {
+          var logo = image.closest('.mmc-org-logo');
+          if (logo) {
+            logo.classList.remove('mmc-org-logo--has-image');
+            logo.classList.add('mmc-org-logo--initials');
+          }
+          image.remove();
+        }
+        image.addEventListener('error', showInitials);
+        if (image.complete && !image.naturalWidth) showInitials();
       });
     }
 

@@ -33,15 +33,20 @@ function assert(condition, message) {
             const style = getComputedStyle(element);
             return { position: style.backgroundPosition, size: style.backgroundSize };
           });
-          assert(directoryHeroStyle.size === '108% auto' && directoryHeroStyle.position === '0% 43%', 'Directory hero is not framed to show the full group');
+          assert(directoryHeroStyle.size === '100% auto' && directoryHeroStyle.position === '50% 25%', 'Directory hero is not framed to show the full group');
         }
-        assert(await page.locator('.mmc-org-logo').count() === 8, 'Organization logos or profile rendering failed');
-        assert(await page.locator('.mmc-org-logo span').allInnerTexts().then(labels => labels.every(label => label.toLowerCase() === 'logo')), 'Organization-logo placeholders do not use the requested label');
+        assert(await page.locator('.mmc-org-logo').count() === 23, 'Organization logos or profile rendering failed');
+        assert(await page.locator('.mmc-org-logo--initials').count() > 0, 'Organization-initial fallbacks are missing');
+        assert(await page.locator('.mmc-org-logo--initials').evaluateAll(elements => new Set(elements.map(element => getComputedStyle(element).backgroundColor)).size === 1), 'Organization-initial fallbacks do not share one blue treatment');
+        for (const name of ['Angela Maniaci', 'Kate Steele', 'Elizabeth OMalley']) {
+          assert(await page.locator('.mmc-directory-card h3', { hasText: name }).count() === 1, `Missing requested profile: ${name}`);
+        }
+        assert(await page.locator('.mmc-directory-card').first().locator('h3').innerText() === 'Kate Steele', 'Default organization sorting is incorrect');
         assert(await page.locator('.mmc-person-avatar').count() === 0, 'Headshot circles remain in the directory');
         assert(await page.locator('.mmc-update-profile').count() === 0, 'Update-profile button was not removed');
         assert(await page.locator('[data-profile-toggle]').count() === 0, 'View-profile controls were not removed');
         assert(await page.locator('.mmc-profile-expansion').count() === 0, 'Expanded profile sections were not removed');
-        assert(await page.locator('.mmc-card-website').count() === 8, 'Website buttons are missing from cards');
+        assert(await page.locator('.mmc-card-website').count() === 25, 'Website buttons are missing from cards');
         assert(await page.locator('.mmc-directory-join-action').count() === 0, 'Nested directory call-to-action remains');
         assert(await page.locator('a.mmc-directory-join-callout--final').count() === 1, 'Directory invitation is not one linked tile');
         assert(await page.locator('.mmc-directory-join-arrow').count() === 0, 'Directory invitation arrow circle remains');
@@ -53,7 +58,7 @@ function assert(condition, message) {
           return { background: style.backgroundColor, width: element.getBoundingClientRect().width, cardWidth: element.closest('.mmc-directory-card').getBoundingClientRect().width };
         });
         assert(websiteStyle.background !== 'rgb(23, 80, 92)' && websiteStyle.width < websiteStyle.cardWidth * .6, 'Website action still dominates the profile card');
-        const longestSector = page.locator('.mmc-sector-tags span').filter({ hasText: /^Community Recreation, Fitness & Parks$/ }).first();
+        const longestSector = page.locator('.mmc-sector-tags span').filter({ hasText: /^Transportation & Community Design$/ }).first();
         assert(parseFloat(await longestSector.evaluate(element => getComputedStyle(element).fontSize)) >= 12, 'Sector labels are still too small');
         assert(await longestSector.evaluate(element => element.getClientRects().length === 1 && element.scrollWidth <= element.clientWidth), 'Longest sector label wraps or overflows');
         if (width === 1440) {
@@ -70,11 +75,14 @@ function assert(condition, message) {
         await page.locator('[data-directory-jump]').click();
         await page.waitForTimeout(400);
         assert(await page.locator('#search-a').evaluate(element => element === document.activeElement), 'Search control did not receive focus');
-        await page.locator('#search-a').fill('Healthcare');
+        await page.locator('#search-a').fill('Angela Maniaci');
         assert(await page.locator('.mmc-directory-card').count() === 1, 'Directory search failed');
         await page.locator('[data-clear-filters]').click();
+        await page.locator('[data-directory-sector]').selectOption('Education');
+        assert(await page.locator('.mmc-directory-card h3', { hasText: 'Kate Steele' }).count() === 1, 'Sector filter failed');
+        await page.locator('[data-clear-filters]').click();
         await page.locator('[data-directory-role-button="Coalition Ambassador"]').click();
-        assert(await page.locator('.mmc-directory-card').count() === 4, 'Role filter failed');
+        assert(await page.locator('.mmc-directory-card').count() === 1, 'Role filter failed');
       } else {
         assert(await page.locator('.mmc-review-bar').count() === 0, 'Get Involved still shows a review notice');
         assert(await page.locator('.mmc-welcome-card').count() === 0, 'Hero role-summary card was not removed');
@@ -92,10 +100,8 @@ function assert(condition, message) {
         }
         assert(await page.locator('.mmc-proof-strip p').nth(2).locator('span').innerText() === 'Sectors aligned', 'Sector statistic text was not shortened');
         assert(parseFloat(await page.locator('.mmc-proof-strip span').first().evaluate(element => getComputedStyle(element).fontSize)) >= 17, 'Statistic text is still too small');
-        assert(await page.locator('.mmc-follow-up-bar__heading p').count() === 0, 'Superseded next-steps sentence remains');
-        assert(await page.locator('.mmc-follow-up-bar').evaluate(element => getComputedStyle(element).borderTopWidth) === '0px', 'Orange follow-up separator remains');
-        const followUpBackgrounds = await page.locator('.mmc-follow-up-bar__roles article').evaluateAll(elements => elements.map(element => getComputedStyle(element).backgroundColor));
-        assert(followUpBackgrounds.length === 2 && followUpBackgrounds[0] !== followUpBackgrounds[1], 'Ambassador and Member follow-up cards are not visually distinct');
+        assert(await page.locator('.mmc-follow-up-bar__heading p').innerText() === 'The Coalition Directory introduces the people and organizations working together to make Michigan more active.', 'Directory explanation is missing');
+        assert(await page.locator('.mmc-follow-up-bar__roles').count() === 0, 'Removed Ambassador and Member follow-up blocks remain');
         assert(await page.locator('.mmc-shared-register').count() === 1, 'Expected one shared registration link');
         assert(await page.locator('.mmc-shared-register').getAttribute('href') === formUrl, 'Registration form URL is wrong');
         assert(await page.locator('.mmc-shared-register__arrow').count() === 0, 'Registration arrow circle remains');
@@ -146,7 +152,9 @@ function assert(condition, message) {
   await page.evaluate(() => { window.MMC_DIRECTORY_RECORDS[0].organizationLogoUrl = '/missing-logo.jpg'; });
   await page.addScriptTag({ url: `${baseUrl}/assets/directory.js` });
   await page.waitForTimeout(200);
-  assert(await page.locator('.mmc-org-logo img').count() === 0, 'Broken logo did not fall back to organization initials');
+  const brokenLogoCard = page.locator('.mmc-directory-card').filter({ hasText: 'Kate Steele' });
+  assert(await brokenLogoCard.locator('.mmc-org-logo img').count() === 0, 'Broken logo did not fall back to organization initials');
+  assert(await brokenLogoCard.locator('.mmc-org-logo--initials').count() === 1, 'Broken logo did not receive the initials fallback treatment');
   await page.screenshot({ path: '/tmp/mimoves-directory.png', fullPage: true });
 
   console.log('Page errors', errors);
